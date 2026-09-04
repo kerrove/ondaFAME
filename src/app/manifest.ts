@@ -2,6 +2,12 @@ import type { MetadataRoute } from 'next'
 
 import { BRAND } from '@/constants/site'
 
+/**
+ * Статический экспорт (GitHub Pages) требует явно объявить роут статическим — иначе Next
+ * считает его динамическим и валит сборку на этапе сбора данных страниц.
+ */
+export const dynamic = 'force-static'
+
 export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: `${BRAND.fullName} — ${BRAND.tagline}`,

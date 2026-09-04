@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 
 import './globals.css'
-import { BRAND, SITE_URL, TELEGRAM_URL } from '@/constants/site'
+import { BRAND, SITE_ORIGIN, SITE_URL, TELEGRAM_URL } from '@/constants/site'
 import { MotionProvider } from '@/providers/motion-provider/MotionProvider'
 
 const inter = Inter({
@@ -13,7 +13,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-	metadataBase: new URL(SITE_URL),
+	metadataBase: new URL(SITE_ORIGIN),
 	title: {
 		default: `${BRAND.fullName} — ${BRAND.tagline}`,
 		template: `%s — ${BRAND.fullName}`
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 	authors: [{ name: BRAND.fullName, url: SITE_URL }],
 	creator: BRAND.fullName,
 	publisher: BRAND.fullName,
-	alternates: { canonical: '/' },
+	alternates: { canonical: `${SITE_URL}/` },
 	openGraph: {
 		type: 'website',
 		locale: 'ru_RU',

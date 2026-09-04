@@ -9,6 +9,13 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onda-fame.
 	''
 )
 
+/**
+ * Только схема и хост, без базового пути. Next сам подставляет basePath к картинкам файловой
+ * конвенции (opengraph-image), поэтому metadataBase обязан быть origin — иначе на GitHub Pages
+ * путь удвоится: /ondaFAME/ondaFAME/opengraph-image.png.
+ */
+export const SITE_ORIGIN = new URL(SITE_URL).origin
+
 /** Адрес Telegram владелец ещё не передал — заменить на реальный перед публикацией. */
 export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/ondafame'
 

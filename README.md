@@ -27,6 +27,28 @@ bun run start    # прод-сервер после сборки
 | `NEXT_PUBLIC_SITE_URL`     | canonical, `sitemap.xml`, `robots.txt`, `og:url`           |
 | `NEXT_PUBLIC_TELEGRAM_URL` | адрес, куда ведут все кнопки «Связаться с нами»            |
 
+## Деплой
+
+Сайт публикуется на GitHub Pages через `.github/workflows/nextjs.yml` — на каждый push в `main`.
+
+Один раз нужно включить Pages: **Settings → Pages → Source → GitHub Actions**. Без этого workflow
+соберётся, но шаг деплоя упадёт.
+
+Workflow ставит зависимости через Bun (у проекта `bun.lock`), а сборку запускает настоящим Node.
+Статический экспорт включается только там, переменной `GITHUB_PAGES=true`: постоянно держать
+`output: 'export'` нельзя, иначе перестанут работать `next dev` и `next start`.
+
+На Pages сайт живёт в подкаталоге `/<repo>`, поэтому workflow передаёт `PAGES_BASE_PATH` и
+`NEXT_PUBLIC_SITE_URL` из `actions/configure-pages` — от них зависят `basePath`, canonical,
+`sitemap.xml`, `robots.txt` и `og:url`.
+
+Собрать экспорт локально:
+
+```bash
+GITHUB_PAGES=true PAGES_BASE_PATH=/ondaFAME NEXT_PUBLIC_SITE_URL=https://kerrove.github.io/ondaFAME bun run build
+# результат в out/
+```
+
 ## Где что лежит
 
 - `src/app` — роут, метаданные, `sitemap.ts`, `robots.ts`, `opengraph-image.png`, `manifest.ts`.

@@ -22,6 +22,14 @@ bun run check      # knip --config ./knip.json — unused files/exports/deps
 bunx tsc --noEmit  # typecheck; there is no `typecheck` script
 ```
 
+**Static export is conditional.** `next.config.ts` turns on `output: 'export'` + `basePath` only when
+`GITHUB_PAGES=true` (set by `.github/workflows/nextjs.yml`, which deploys to GitHub Pages). Do not
+make it unconditional — `next dev`/`next start` stop working under export. Route handlers that must
+survive export (`sitemap.ts`, `robots.ts`, `manifest.ts`) carry `export const dynamic = 'force-static'`;
+removing it fails the export build at page-data collection. `metadataBase` is the **origin only**
+(`SITE_ORIGIN`), because Next prepends `basePath` to file-convention images itself — putting the base
+path in both doubles it (`/repo/repo/opengraph-image.png`).
+
 **`build` and `start` invoke `node node_modules/next/dist/bin/next` on purpose — do not shorten them
 back to `next build`.** `next` has a `#!/usr/bin/env node` shebang, and under `bun run` Bun executes
 it in-process instead of spawning Node. On Vercel (Bun 1.3.14, Linux x64) that process segfaults

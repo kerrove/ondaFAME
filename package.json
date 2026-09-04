@@ -11,7 +11,7 @@
     "bun": "^1.2"
   },
   "scripts": {
-    "prebuild": "rimraf .next",
+    "prebuild": "rimraf .next out",
     "dev": "next dev -H 0.0.0.0 -p 3000",
     "dev-local": "next dev --turbopack -H 0.0.0.0 -p 3000",
     "build": "node node_modules/next/dist/bin/next build",
