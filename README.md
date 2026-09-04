@@ -29,7 +29,12 @@ bun run start    # прод-сервер после сборки
 
 ## Где что лежит
 
-- `src/app` — роут, метаданные, `sitemap.ts`, `robots.ts`, `opengraph-image.tsx`, `manifest.ts`.
+- `src/app` — роут, метаданные, `sitemap.ts`, `robots.ts`, `opengraph-image.png`, `manifest.ts`.
+
+Превью для соцсетей — статический файл `src/app/opengraph-image.png` (1200×630) рядом с
+`opengraph-image.alt.txt`; Next сам подставляет из них `og:image` и `twitter:image`. Раньше картинка
+рисовалась на сборке через `next/og`, но это тянуло в билд WASM (`resvg`, `yoga`) ради изображения,
+которое никогда не меняется. Чтобы обновить превью — замените PNG.
 - `src/components` — секции страницы, по папке на секцию.
 - `src/ui` — переиспользуемые примитивы (Button, Carousel, Avatar, Reveal, GridBackdrop).
 
