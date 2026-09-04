@@ -13,7 +13,7 @@ npm/yarn/pnpm variants in README.md — that text is create-next-app boilerplate
 bun install
 bun run dev        # next dev -H 0.0.0.0 -p 3000 (no turbopack; also regenerates AGENTS.md + .next/types/*)
 bun run dev-local  # same, with --turbopack
-bun run build      # prebuild runs `rimraf .next`, then next build
+bun run build      # prebuild runs `rimraf .next`, then next build via real node (see below)
 bun run start      # next start (requires a prior build)
 bun run prod       # build + start on 0.0.0.0:3000
 bun run lint       # bare `eslint` (flat config), not `next lint`
@@ -21,6 +21,14 @@ bun run format     # prettier --write "src/**/*.{ts,tsx}"
 bun run check      # knip --config ./knip.json — unused files/exports/deps
 bunx tsc --noEmit  # typecheck; there is no `typecheck` script
 ```
+
+**`build` and `start` invoke `node node_modules/next/dist/bin/next` on purpose — do not shorten them
+back to `next build`.** `next` has a `#!/usr/bin/env node` shebang, and under `bun run` Bun executes
+it in-process instead of spawning Node. On Vercel (Bun 1.3.14, Linux x64) that process segfaults
+during teardown *after* the build has already succeeded and printed its route table — the artifacts
+are fine, but the non-zero exit code fails the deploy. `next/og` builds the OG image through
+`resvg.wasm`/`yoga.wasm`, and WASM teardown is the likely trigger. Routing the build through real
+Node avoids the whole class of problem and costs nothing locally.
 
 **Tests: scripts exist, runners do not.** `test`, `test:watch`, `test:e2e`, `test:e2e-watch` point at
 `jest` and `playwright`, but neither is in `package.json` deps nor in `node_modules`, and there is no
