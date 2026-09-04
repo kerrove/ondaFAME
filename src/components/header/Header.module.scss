@@ -1,0 +1,69 @@
+.header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: color-mix(in srgb, var(--void) 82%, transparent);
+	backdrop-filter: blur(14px);
+	border-bottom: 1px solid var(--hairline);
+}
+
+.inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: min(100% - 2 * var(--gutter), var(--container));
+	margin-inline: auto;
+	height: 4.5rem;
+}
+
+.brand {
+	display: inline-flex;
+	align-items: center;
+	flex: none;
+}
+
+/* Навигация — вспомогательная: на узких экранах уступает место единственному действию */
+.nav {
+	display: none;
+}
+
+.list {
+	display: flex;
+	gap: 1.75rem;
+}
+
+.link {
+	color: var(--muted);
+	font-size: 0.9375rem;
+	transition: color 0.2s var(--ease-out);
+}
+
+.link:hover {
+	color: var(--foreground);
+}
+
+.cta {
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+/* Ниже 400px «Связаться с нами» рядом с логотипом не помещается в полном размере */
+@media (max-width: 400px) {
+	.inner {
+		height: 4rem;
+	}
+
+	.cta {
+		height: 2.5rem;
+		padding-inline: 0.75rem;
+		font-size: 0.8125rem;
+		gap: 0.5rem;
+	}
+}
+
+@media (min-width: 900px) {
+	.nav {
+		display: block;
+	}
+}

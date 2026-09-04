@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ONDA FAME
 
-## Getting Started
+Лендинг маркетингового агентства полного цикла для музыкантов. Русский язык, только тёмная тема,
+адаптив от 320px.
 
-First, run the development server:
+## Запуск
+
+Пакетный менеджер — [bun](https://bun.sh).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev      # next dev на 0.0.0.0:3000
+
+bun run build    # прод-сборка
+bun run start    # прод-сервер после сборки
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Проверки: `bunx tsc --noEmit` (типы), `bun run lint` (ESLint), `bun run format` (Prettier),
+`bun run check` (knip).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Переменные окружения
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Скопируйте `.env.example` в `.env` и заполните:
 
-## Learn More
+| Переменная                 | Зачем                                                     |
+| -------------------------- | --------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`     | canonical, `sitemap.xml`, `robots.txt`, `og:url`           |
+| `NEXT_PUBLIC_TELEGRAM_URL` | адрес, куда ведут все кнопки «Связаться с нами»            |
 
-To learn more about Next.js, take a look at the following resources:
+## Где что лежит
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app` — роут, метаданные, `sitemap.ts`, `robots.ts`, `opengraph-image.tsx`, `manifest.ts`.
+- `src/components` — секции страницы, по папке на секцию.
+- `src/ui` — переиспользуемые примитивы (Button, Carousel, Avatar, Reveal, GridBackdrop).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Папки — в нижнем регистре через дефис, файлы названы по компоненту, `index.tsx` не используется:
+`src/components/cta-band/CtaBand.tsx`.
+- `src/constants` — **весь текст и данные сайта**: услуги, кейсы, команда, F.A.Q., бренд.
+- `PRODUCT.md` — продуктовая правда, `DESIGN.md` — визуальная система.
 
-## Deploy on Vercel
+Контент правится только в `src/constants` — вёрстку трогать не нужно.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Что нужно заменить перед публикацией
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Перечислено в конце `PRODUCT.md` («Не решено»): домен, адрес Telegram, фотографии команды
+(`photo: null` в `src/constants/team.ts`), аватар артиста в кейсе, значения января и февраля на
+графике кейса (сейчас интерполяция между подтверждёнными точками).

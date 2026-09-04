@@ -1,0 +1,28 @@
+.avatar {
+	flex: none;
+	max-width: 100%;
+	object-fit: cover;
+	background: var(--panel-raised);
+	border: 1px solid var(--hairline);
+}
+
+.square {
+	border-radius: var(--radius-panel);
+}
+
+.circle {
+	border-radius: var(--radius-pill);
+}
+
+.fallback {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	aspect-ratio: 1;
+	color: var(--accent);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	background:
+		radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 70%),
+		var(--panel-raised);
+}

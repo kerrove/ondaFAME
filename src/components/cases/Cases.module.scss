@@ -1,0 +1,128 @@
+.track {
+	grid-auto-columns: 100%;
+}
+
+.card {
+	display: grid;
+	gap: 2rem;
+	padding: 1.5rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-panel);
+	background: var(--panel);
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.identity {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+/* Обложка обесцвечена, как и портреты команды: единственный цвет на сайте — сигнальный зелёный */
+.identity img {
+	filter: grayscale(1);
+}
+
+.tag {
+	display: inline-block;
+	margin-bottom: 0.625rem;
+	padding: 0.3125rem 0.75rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-pill);
+	color: var(--muted);
+	font-size: 0.75rem;
+	line-height: 1.2;
+}
+
+.title {
+	font-size: clamp(1.375rem, 3vw, 1.875rem);
+	font-weight: 800;
+	line-height: 1.15;
+	letter-spacing: -0.03em;
+}
+
+.trackName {
+	color: var(--accent);
+}
+
+.description {
+	max-width: 60ch;
+	color: var(--muted);
+	font-size: 0.9375rem;
+	line-height: 1.65;
+	text-wrap: pretty;
+}
+
+/* Метрики */
+.metrics {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: auto;
+	padding-top: 1.75rem;
+}
+
+.metric {
+	flex: 1 1 8rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.1875rem;
+	padding: 0.875rem 1rem;
+	border-radius: var(--radius-tile);
+	background: var(--panel-raised);
+	/* Полоса-индикатор слева — 3px, единственное место в системе, где она допущена */
+	box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.metricValue {
+	color: var(--accent);
+	font-size: 1.25rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.metricLabel {
+	color: var(--faint);
+	font-size: 0.8125rem;
+}
+
+/* График */
+.chart {
+	margin: 0;
+	min-width: 0;
+}
+
+.canvas {
+	position: relative;
+	height: clamp(15rem, 38vw, 20rem);
+}
+
+.chartSkeleton {
+	height: clamp(15rem, 38vw, 20rem);
+	border-radius: var(--radius-tile);
+	background:
+		linear-gradient(to right, var(--grid-line) 1px, transparent 1px) 0 0 / 52px 100%,
+		linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px) 0 0 / 100% 44px,
+		var(--panel-raised);
+}
+
+@media (min-width: 640px) {
+	.card {
+		padding: 2rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.card {
+		grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+		align-items: center;
+		gap: 3rem;
+		padding: 2.5rem;
+	}
+}

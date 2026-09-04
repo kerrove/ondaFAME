@@ -1,0 +1,23 @@
+.track {
+	display: grid;
+	grid-auto-flow: column;
+	gap: 1.25rem;
+	/* Выход за контейнер, чтобы лента упиралась в край экрана, а не в отступ */
+	margin-inline: calc(-1 * var(--gutter));
+	padding-inline: var(--gutter);
+	/* Без этого mandatory-снап притягивает первую карточку к краю и съедает боковой отступ */
+	scroll-padding-inline: var(--gutter);
+	padding-block: 0.25rem;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+	display: none;
+}
+
+.track > * {
+	scroll-snap-align: start;
+}

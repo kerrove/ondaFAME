@@ -1,0 +1,59 @@
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.625rem;
+	border-radius: var(--radius-pill);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+	cursor: pointer;
+	transition:
+		background-color 0.2s var(--ease-out),
+		border-color 0.2s var(--ease-out),
+		box-shadow 0.25s var(--ease-out),
+		transform 0.2s var(--ease-out);
+}
+
+.button:active {
+	transform: translateY(1px);
+}
+
+.md {
+	height: 2.75rem;
+	padding-inline: 1.25rem;
+	font-size: 0.9375rem;
+}
+
+.lg {
+	height: 3.375rem;
+	padding-inline: 1.75rem;
+	font-size: 1.0625rem;
+}
+
+.primary {
+	background: var(--accent);
+	color: var(--void);
+	/* Тень со смещением по Y, а не ровный ореол */
+	box-shadow: 0 8px 24px -10px var(--accent-glow);
+}
+
+.primary:hover {
+	background: var(--accent-strong);
+	box-shadow: 0 12px 30px -10px var(--accent-glow);
+}
+
+.ghost {
+	background: var(--panel);
+	color: var(--foreground);
+	border: 1px solid var(--hairline);
+}
+
+.ghost:hover {
+	background: var(--panel-raised);
+	border-color: var(--hairline-strong);
+}
+
+.icon {
+	flex: none;
+}

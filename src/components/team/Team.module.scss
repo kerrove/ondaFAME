@@ -1,0 +1,58 @@
+.track {
+	grid-auto-columns: calc((100% - 1.25rem) / 2);
+	align-items: start;
+}
+
+.member {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.photo {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
+	margin-bottom: 1.125rem;
+	transition: filter 0.35s var(--ease-out);
+}
+
+/* Портреты чёрно-белые, как в референсе. Плитку с инициалами не трогаем — она и так фирменная. */
+img.photo {
+	filter: grayscale(1);
+}
+
+.member:hover img.photo {
+	filter: grayscale(0.35);
+}
+
+.name {
+	font-size: 1.0625rem;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+}
+
+.role {
+	margin-top: 0.375rem;
+	max-width: 24ch;
+	color: var(--muted);
+	font-size: 0.8125rem;
+	line-height: 1.45;
+	text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+	.track {
+		grid-auto-columns: calc((100% - 3.75rem) / 4);
+	}
+
+	.name {
+		font-size: 1.125rem;
+	}
+
+	.role {
+		font-size: 0.875rem;
+	}
+}

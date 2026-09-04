@@ -1,0 +1,74 @@
+.track {
+	grid-auto-columns: minmax(17rem, 82vw);
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	padding: 1.75rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-panel);
+	background: var(--panel);
+	overflow: hidden;
+	transition: border-color 0.25s var(--ease-out);
+}
+
+/* Сетка продолжается внутри карточки — это тот же прибор, просто ближе */
+.card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+	background-size: 44px 44px;
+	mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000, transparent 75%);
+}
+
+.card:hover {
+	border-color: var(--hairline-strong);
+}
+
+.icon {
+	position: relative;
+	display: grid;
+	place-items: center;
+	width: 5.25rem;
+	height: 5.25rem;
+	margin-bottom: 1.75rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-tile);
+	background: var(--panel-raised);
+	color: var(--accent);
+	box-shadow: 0 12px 26px -14px var(--accent-glow);
+}
+
+.title {
+	position: relative;
+	margin-bottom: 0.75rem;
+	font-size: 1.125rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.description {
+	position: relative;
+	color: var(--muted);
+	font-size: 0.9375rem;
+	line-height: 1.6;
+	text-wrap: pretty;
+}
+
+@media (min-width: 640px) {
+	.track {
+		grid-auto-columns: calc((100% - 1.25rem) / 2);
+	}
+}
+
+@media (min-width: 1024px) {
+	.track {
+		grid-auto-columns: calc((100% - 2.5rem) / 3);
+	}
+}

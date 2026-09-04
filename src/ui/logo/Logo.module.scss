@@ -1,0 +1,14 @@
+.logo {
+	font-size: clamp(1.125rem, 5vw, 1.375rem);
+	font-weight: 800;
+	letter-spacing: -0.035em;
+	line-height: 1;
+}
+
+.light {
+	color: var(--foreground);
+}
+
+.accent {
+	color: var(--accent);
+}

@@ -1,0 +1,148 @@
+.hero {
+	position: relative;
+	overflow: hidden;
+	padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(4rem, 9vw, 7rem);
+}
+
+.inner {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: min(100% - 2 * var(--gutter), var(--container));
+	margin-inline: auto;
+	text-align: center;
+}
+
+/* Кольцо */
+.ring {
+	position: relative;
+	display: grid;
+	place-items: center;
+	width: clamp(4.5rem, 12vw, 6.5rem);
+	aspect-ratio: 1;
+	margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.ringArc,
+.ringPulse {
+	position: absolute;
+	inset: 0;
+	border-radius: var(--radius-pill);
+}
+
+/* Неподвижное основание кольца */
+.ring::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border: 2px solid rgba(255, 255, 255, 0.22);
+	border-radius: var(--radius-pill);
+}
+
+/* Зелёный сегмент бежит по кольцу — сигнал, идущий по кругу */
+.ringArc {
+	border: 2px solid var(--accent);
+	mask-image: conic-gradient(#000 0deg 100deg, transparent 100deg 360deg);
+	filter: drop-shadow(0 0 6px var(--accent-glow));
+	animation: spin 3.2s linear infinite;
+}
+
+.ringPulse {
+	background: radial-gradient(circle, var(--accent-soft), transparent 68%);
+	animation: pulse 3.2s var(--ease-out) infinite;
+}
+
+@keyframes spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 0.35;
+		scale: 0.9;
+	}
+	50% {
+		opacity: 1;
+		scale: 1.25;
+	}
+}
+
+/* Типографика */
+.title {
+	max-width: 15ch;
+	font-size: clamp(2.75rem, 8vw, 4.5rem);
+	font-weight: 800;
+	line-height: 1.02;
+	letter-spacing: -0.04em;
+	text-wrap: balance;
+}
+
+.lead {
+	max-width: 56ch;
+	margin-top: 1.5rem;
+	color: var(--muted);
+	font-size: clamp(1rem, 1.6vw, 1.125rem);
+	line-height: 1.6;
+	text-wrap: pretty;
+}
+
+/* Подтверждения */
+.badges {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: 100%;
+	max-width: 34rem;
+	margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+
+.badge {
+	display: flex;
+	align-items: center;
+	gap: 0.875rem;
+	padding: 0.9375rem 1.125rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-tile);
+	background: var(--panel);
+	color: var(--foreground);
+	font-size: 0.9375rem;
+	font-weight: 500;
+	line-height: 1.4;
+	text-align: left;
+}
+
+.badge svg {
+	flex: none;
+	color: var(--accent);
+}
+
+.action {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.875rem;
+	margin-top: clamp(2.25rem, 5vw, 3rem);
+}
+
+.note {
+	color: var(--faint);
+	font-size: 0.8125rem;
+}
+
+@media (min-width: 768px) {
+	.badges {
+		flex-direction: row;
+		max-width: none;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.badge {
+		flex: 1 1 15rem;
+		max-width: 22rem;
+	}
+}

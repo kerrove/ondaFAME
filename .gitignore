@@ -9,12 +9,16 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+REVIEW.md
+SOLID.md
+graphify-out/
 # testing
 /coverage
 
 # next.js
 /.next/
+/.idea/
+/.vscode/
 /out/
 
 # production
@@ -23,6 +27,7 @@
 # misc
 .DS_Store
 *.pem
+*.log
 
 # debug
 npm-debug.log*
@@ -32,6 +37,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +45,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/.idea/vcs.xml
+/.playwright-mcp/
+*.tmp*

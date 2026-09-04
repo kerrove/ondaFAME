@@ -1,0 +1,87 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "types": [
+      "@testing-library/jest-dom",
+      "jest",
+      "node",
+      "bun"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "components/*": [
+        "./src/components/*"
+      ],
+      "forms/*": [
+        "./src/components/forms/*"
+      ],
+      "constants/*": [
+        "./src/constants/*"
+      ],
+      "services/*": [
+        "./src/services/*"
+      ],
+      "ui/*": [
+        "./src/components/ui/*"
+      ],
+      "config/*": [
+        "./src/configs/*"
+      ],
+      "store/*": [
+        "./src/store/*"
+      ],
+      "types/*": [
+        "./src/types/*"
+      ],
+      "hooks/*": [
+        "./src/hooks/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
+      ],
+      "api/*": [
+        "./src/api/*"
+      ],
+      "src/*": [
+        "./src/*"
+      ],
+      "tests/*": [
+        "./__tests__/*"
+      ],
+    },
+    "target": "ES2017"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "__mocks__/*",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "jest.config.ts"
+  ]
+}
