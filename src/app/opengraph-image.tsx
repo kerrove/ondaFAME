@@ -14,11 +14,30 @@ const MUTED = '#a1a1aa'
 /**
  * Начертание для превью: Inter Bold, статический инстанс с кириллицей (79 КБ).
  * Файл лежит в репозитории, поэтому сборка не ходит в сеть.
+ *
+ * Читаем ленивно и внутри обработчика. На шаге «Collecting page data» Next импортирует этот
+ * модуль в воркере ради экспортов alt/size/contentType — чтение на верхнем уровне создало бы
+ * промис, который никто не ждёт, и при отказе Node убил бы воркер без единой строки в логе.
+ * Отказ здесь не фатален: next/og подставит встроенный Geist, он тоже покрывает кириллицу.
  */
-const font = readFile(join(process.cwd(), 'src/assets/fonts/Inter-Bold.ttf'))
+let fontCache: Buffer | null | undefined
+
+async function loadFont() {
+	if (fontCache !== undefined) return fontCache
+
+	try {
+		fontCache = await readFile(join(process.cwd(), 'src/assets/fonts/Inter-Bold.ttf'))
+	} catch {
+		fontCache = null
+	}
+
+	return fontCache
+}
 
 /** Превью для соцсетей: то же чёрное поле и тот же сигнальный зелёный, что и на странице. */
 export default async function OpengraphImage() {
+	const font = await loadFont()
+
 	return new ImageResponse(
 		<div
 			style={{
@@ -30,7 +49,8 @@ export default async function OpengraphImage() {
 				background: '#000000',
 				padding: 80,
 				color: '#ffffff',
-				fontFamily: 'Inter'
+				// Ключ со значением undefined satori не переваривает — либо семейство есть, либо ключа нет
+				...(font ? { fontFamily: 'Inter' } : null)
 			}}
 		>
 			<div
@@ -80,7 +100,7 @@ export default async function OpengraphImage() {
 		</div>,
 		{
 			...size,
-			fonts: [{ name: 'Inter', data: await font, weight: 700, style: 'normal' }]
+			...(font ? { fonts: [{ name: 'Inter', data: font, weight: 700, style: 'normal' }] } : null)
 		}
 	)
 }
