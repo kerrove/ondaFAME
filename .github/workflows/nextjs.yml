@@ -57,13 +57,22 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # .env в репозиторий не коммитится, поэтому в CI его нет: значения приходят секретами
+      # репозитория (Settings → Secrets and variables → Actions). Незаданный секрет разворачивается
+      # в пустую строку, поэтому у каждого есть запасной вариант — сборка не падает без настройки.
       - name: Build static site
         env:
           GITHUB_PAGES: 'true'
           # На Pages сайт живёт в подкаталоге /<repo>, без basePath ассеты уедут в корень домена
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          # Читается в src/constants/site.ts — canonical, sitemap.xml, robots.txt, og:url
-          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}${{ steps.pages.outputs.base_path }}
+          # Секрет SITE_URL — боевой домен. Пока его нет, берётся адрес самих Pages.
+          # Читается в src/constants/site.ts — canonical, sitemap.xml, robots.txt, og:url.
+          # Свой домен требует настройки и в самом Pages: base_path приходит оттуда, и если
+          # домен прописан только в секрете, ссылки уедут в подкаталог /<repo>.
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.SITE_URL || format('{0}{1}', steps.pages.outputs.origin, steps.pages.outputs.base_path) }}
+          # Секрет TG_URL — адрес, куда ведут все кнопки «Связаться с нами».
+          # Пусто — остаётся значение по умолчанию из src/constants/site.ts.
+          NEXT_PUBLIC_TELEGRAM_URL: ${{ secrets.TG_URL }}
         run: bun run build
 
       - name: Upload artifact

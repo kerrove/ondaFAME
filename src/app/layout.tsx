@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 		'масспостинг'
 	],
 	authors: [{ name: BRAND.fullName, url: SITE_URL }],
-	creator: BRAND.fullName,
+	creator: 'https://kerrove.ru',
 	publisher: BRAND.fullName,
 	alternates: { canonical: `${SITE_URL}/` },
 	openGraph: {
