@@ -63,8 +63,9 @@ jobs:
       - name: Build static site
         env:
           GITHUB_PAGES: 'true'
-          # На Pages сайт живёт в подкаталоге /<repo>, без basePath ассеты уедут в корень домена
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # На Pages сайт живёт в подкаталоге /<repo>, без basePath ассеты уедут в корень домена.
+          # Читается и next.config.ts (basePath), и кодом приложения (src/utils/asset.ts).
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           # Секрет SITE_URL — боевой домен. Пока его нет, берётся адрес самих Pages.
           # Читается в src/constants/site.ts — canonical, sitemap.xml, robots.txt, og:url.
           # Свой домен требует настройки и в самом Pages: base_path приходит оттуда, и если
