@@ -7,11 +7,21 @@
 }
 
 .square {
-	border-radius: var(--radius-panel);
+	border-radius: var(--radius-portrait);
 }
 
 .circle {
 	border-radius: var(--radius-pill);
+}
+
+.tile {
+	border-radius: var(--radius-tile);
+}
+
+/* Скругление и обрезка — на оправе снаружи, иначе внутри рамки видны двойные углы */
+.plain {
+	border: 0;
+	border-radius: 0;
 }
 
 .fallback {
@@ -19,7 +29,7 @@
 	place-items: center;
 	width: 100%;
 	aspect-ratio: 1;
-	color: var(--accent);
+	color: var(--accent-text);
 	font-weight: 700;
 	letter-spacing: -0.02em;
 	background:

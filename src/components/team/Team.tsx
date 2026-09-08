@@ -43,13 +43,16 @@ export function Team() {
 								itemProp='position'
 								content={String(index + 1)}
 							/>
-							<Avatar
-								name={member.name}
-								src={member.photo}
-								size={200}
-								className={styles.photo}
-								decorative
-							/>
+							<div className={styles.frame}>
+								<Avatar
+									name={member.name}
+									src={member.photo}
+									size={200}
+									shape='plain'
+									className={styles.photo}
+									decorative
+								/>
+							</div>
 							<h3
 								className={styles.name}
 								itemProp='name'

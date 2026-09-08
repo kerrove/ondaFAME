@@ -1,7 +1,8 @@
+import { ImagesConfig } from '@/configs/images.config'
 import type { CaseStudy } from '@/types'
 
 /**
- * Кейс Lover — «Танцуй».
+ * Кейс HOROSHIYAGNI — «Плохой».
  *
  * Подтверждённые владельцем точки: старт в декабре — 50 000 слушателей, финал в апреле —
  * 1 500 000 слушателей и более 100 000 клипов; контрольная точка марта — 900 000 слушателей и
@@ -10,13 +11,13 @@ import type { CaseStudy } from '@/types'
  */
 export const CASES: CaseStudy[] = [
 	{
-		id: 'lover-tancuy',
-		artist: 'Lover',
-		track: 'Танцуй',
+		id: 'horoshiyagni-plohoy',
+		artist: 'HOROSHIYAGNI',
+		track: 'Плохой',
 		tag: 'Масспостинг и продвижение в TikTok',
 		description:
 			'Запустили продвижение трека в TikTok, главной целью которого был максимальный охват по количеству клипов и использований трека. По итогам компании было создано более чем 100 000 клипов. Количество слушателей выросло с 50 000 до 1 500 000 человек.',
-		avatar: '/lover-dance.jpg',
+		cover: ImagesConfig.SONG,
 		metrics: [
 			{ id: 'plays', value: '140M+', label: 'Прослушивания' },
 			{ id: 'listeners', value: '1.5M+', label: 'Ежемес. слушатели' },

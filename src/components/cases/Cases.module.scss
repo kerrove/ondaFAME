@@ -3,12 +3,25 @@
 }
 
 .card {
+	position: relative;
 	display: grid;
 	gap: 2rem;
 	padding: 1.5rem;
 	border: 1px solid var(--hairline);
 	border-radius: var(--radius-panel);
 	background: var(--panel);
+	overflow: hidden;
+}
+
+/* Фирменный блик по верхней кромке — тот же источник света, что и под портретами команды */
+.card::before {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	height: 1px;
+	pointer-events: none;
+	background: var(--lit-edge);
 }
 
 .body {
@@ -18,15 +31,20 @@
 }
 
 .identity {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 1rem;
 	margin-bottom: 1.5rem;
 }
 
-/* Обложка обесцвечена, как и портреты команды: единственный цвет на сайте — сигнальный зелёный */
-.identity img {
-	filter: grayscale(1);
+/*
+ * Обложка релиза показывается в своём цвете: обесцвечивать артворк — значит спорить с артистом.
+ * Вместо фильтра под ней лежит то же фиолетовое свечение со смещением по Y, что и под кнопкой.
+ */
+.cover {
+	flex: none;
+	box-shadow: 0 14px 30px -18px var(--accent-glow);
 }
 
 .tag {
@@ -35,6 +53,7 @@
 	padding: 0.3125rem 0.75rem;
 	border: 1px solid var(--hairline);
 	border-radius: var(--radius-pill);
+	background: var(--panel-raised);
 	color: var(--muted);
 	font-size: 0.75rem;
 	line-height: 1.2;
@@ -48,7 +67,7 @@
 }
 
 .trackName {
-	color: var(--accent);
+	color: var(--accent-text);
 }
 
 .description {
@@ -69,6 +88,7 @@
 }
 
 .metric {
+	position: relative;
 	flex: 1 1 8rem;
 	display: flex;
 	flex-direction: column;
@@ -76,12 +96,21 @@
 	padding: 0.875rem 1rem;
 	border-radius: var(--radius-tile);
 	background: var(--panel-raised);
-	/* Полоса-индикатор слева — 3px, единственное место в системе, где она допущена */
-	box-shadow: inset 3px 0 0 var(--accent);
+	overflow: hidden;
+}
+
+/* Тот же блик, что на карточке: плитка внутри неё освещена той же лампой, только ближе */
+.metric::before {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	height: 1px;
+	background: var(--lit-edge);
 }
 
 .metricValue {
-	color: var(--accent);
+	color: var(--accent-text);
 	font-size: 1.25rem;
 	font-weight: 800;
 	letter-spacing: -0.02em;

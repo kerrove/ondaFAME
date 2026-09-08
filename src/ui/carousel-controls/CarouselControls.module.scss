@@ -25,8 +25,8 @@
 }
 
 .arrow:hover:not(:disabled) {
-	border-color: var(--accent);
-	color: var(--accent);
+	border-color: var(--accent-text);
+	color: var(--accent-text);
 	background: var(--accent-soft);
 }
 

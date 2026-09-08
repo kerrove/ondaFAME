@@ -8,32 +8,48 @@
 :root {
 	color-scheme: dark;
 
-	/* Поверхности: чёрный холст и две ступени подъёма */
+	/* Поверхности: чёрный холст с фиолетовым подмесом и две ступени подъёма */
 	--void: #000000;
-	--panel: #101010;
-	--panel-raised: #161616;
-	--hairline: rgba(255, 255, 255, 0.08);
-	--hairline-strong: rgba(255, 255, 255, 0.16);
-	--grid-line: rgba(255, 255, 255, 0.045);
+	--panel: #0b0710;
+	--panel-raised: #150d20;
+	/* Границы и сетка тоже несут акцентный тон — на чистом белом система распадалась на два мира */
+	--hairline: rgba(196, 162, 255, 0.1);
+	--hairline-strong: rgba(196, 162, 255, 0.22);
+	--grid-line: rgba(167, 139, 250, 0.06);
 	/* Сетка внутри canvas — чуть плотнее фоновой, иначе на графике её не видно */
-	--grid-line-chart: rgba(255, 255, 255, 0.06);
+	--grid-line-chart: rgba(167, 139, 250, 0.09);
 
-	/* Текст */
+	/* Текст: серые уводятся в фиолетовую сторону, иначе рядом с панелью читаются как грязь */
 	--foreground: #ffffff;
-	--muted: #a1a1aa;
-	--faint: #8f8f99;
+	--muted: #a8a1b8;
+	--faint: #95909f;
 
-	/* Сигнал */
-	--accent: #4ee35c;
-	--accent-strong: #3ed14c;
-	--accent-soft: rgba(78, 227, 92, 0.16);
-	--accent-glow: rgba(78, 227, 92, 0.28);
-	--data-blue: #3b82f6;
+	/*
+	 * Сигнал двухступенчатый: ядро живёт на штрихах, иконках и заливках, текстовая ступень — на
+	 * типографике. Ядро на чёрном даёт 5:1 (хватает иконке, но не абзацу), светлая ступень — 10:1.
+	 */
+	--accent: #8b5cf6;
+	--accent-text: #c4a2ff;
+	/* Заливка кнопки идёт под белым текстом: 5.7:1 против 4.2:1 у ядра */
+	--accent-fill: #7c3aed;
+	--accent-fill-hover: #6d28d9;
+	--accent-soft: rgba(139, 92, 246, 0.16);
+	--accent-glow: rgba(139, 92, 246, 0.34);
+	/* Вторая серия графика: голубой, а не синий — рядом с фиолетовым синий не различается */
+	--data-cyan: #22d3ee;
 
 	/* Форма */
-	--radius-panel: 20px;
-	--radius-tile: 14px;
+	--radius-panel: 24px;
+	--radius-tile: 16px;
+	/* Портреты и обложки скруглены сильнее панелей: это плитка, а не документ */
+	--radius-portrait: 28px;
 	--radius-pill: 999px;
+
+	/*
+	 * Фирменный блик: одна и та же лампа освещает верхнюю кромку каждой панели. Ставится через
+	 * псевдоэлемент высотой 1px, никогда как цветная рамка.
+	 */
+	--lit-edge: linear-gradient(90deg, transparent 6%, rgba(196, 162, 255, 0.34) 50%, transparent 94%);
 
 	/* Ритм */
 	--container: 1200px;
@@ -122,8 +138,8 @@ video {
 }
 
 ::selection {
-	background: var(--accent);
-	color: var(--void);
+	background: var(--accent-fill);
+	color: var(--foreground);
 }
 
 /* Скрыто визуально, но остаётся для скринридера */
@@ -163,8 +179,8 @@ video {
 	translate: -50% -150%;
 	padding: 0.75rem 1.25rem;
 	border-radius: 0 0 var(--radius-tile) var(--radius-tile);
-	background: var(--accent);
-	color: var(--void);
+	background: var(--accent-fill);
+	color: var(--foreground);
 	font-weight: 600;
 	transition: translate 0.2s var(--ease-out);
 }

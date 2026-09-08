@@ -30,9 +30,10 @@ export function CaseCard({ study, position }: Props) {
 				<div className={styles.identity}>
 					<Avatar
 						name={study.artist}
-						src={study.avatar}
-						size={72}
-						shape='circle'
+						src={study.cover}
+						size={80}
+						shape='tile'
+						className={styles.cover}
 						decorative
 					/>
 					<div>

@@ -10,21 +10,54 @@
 	text-align: center;
 }
 
+/*
+ * Портрет стоит в фирменной оправе: обесцвечивания нет, вместо него фиолетовый свет снизу — как
+ * от сцены. Оправа же даёт скругление и волосяную кромку, поэтому само фото остаётся честным.
+ */
+.frame {
+	position: relative;
+	width: 100%;
+	margin-bottom: 1.125rem;
+	border-radius: var(--radius-portrait);
+	overflow: hidden;
+	box-shadow: inset 0 0 0 1px var(--hairline);
+	transition: box-shadow 0.35s var(--ease-out);
+}
+
 .photo {
 	width: 100%;
 	height: auto;
 	aspect-ratio: 1;
-	margin-bottom: 1.125rem;
-	transition: filter 0.35s var(--ease-out);
+	transition: scale 0.5s var(--ease-out);
 }
 
-/* Портреты чёрно-белые, как в референсе. Плитку с инициалами не трогаем — она и так фирменная. */
-img.photo {
-	filter: grayscale(1);
+/*
+ * Свет сцены: заливка снизу вверх. Снимки сняты в разных условиях — двор днём, студия в неоне,
+ * парковка ночью, — и общий нижний свет единственное, что честно их связывает. Тонировать кадры
+ * блендом пробовали: на цветных снимках он не виден, а монохромный перекрашивает целиком.
+ */
+.frame::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background: linear-gradient(to top, var(--accent-glow), transparent 46%);
+	opacity: 0.9;
+	transition: opacity 0.35s var(--ease-out);
 }
 
-.member:hover img.photo {
-	filter: grayscale(0.35);
+.member:hover .frame {
+	box-shadow:
+		inset 0 0 0 1px var(--hairline-strong),
+		0 18px 40px -24px var(--accent-glow);
+}
+
+.member:hover .frame::after {
+	opacity: 1;
+}
+
+.member:hover .photo {
+	scale: 1.03;
 }
 
 .name {

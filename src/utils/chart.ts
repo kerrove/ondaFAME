@@ -8,7 +8,9 @@ const FALLBACK_FONT = "system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
 export interface ChartTheme {
 	font: string
 	accent: string
-	blue: string
+	/** Светлая ступень акцента — значение в тултипе лежит на приподнятой панели, ядру там темно */
+	accentText: string
+	cyan: string
 	grid: string
 	tick: string
 	panel: string
@@ -21,12 +23,13 @@ export function readChartTheme(): ChartTheme {
 
 	return {
 		font: getComputedStyle(document.body).fontFamily || FALLBACK_FONT,
-		accent: token('--accent', '#4ee35c'),
-		blue: token('--data-blue', '#3b82f6'),
-		grid: token('--grid-line-chart', 'rgba(255, 255, 255, 0.06)'),
-		tick: token('--faint', '#8f8f99'),
-		panel: token('--panel-raised', '#161616'),
-		hairline: token('--hairline-strong', 'rgba(255, 255, 255, 0.16)')
+		accent: token('--accent', '#8b5cf6'),
+		accentText: token('--accent-text', '#c4a2ff'),
+		cyan: token('--data-cyan', '#22d3ee'),
+		grid: token('--grid-line-chart', 'rgba(167, 139, 250, 0.09)'),
+		tick: token('--faint', '#95909f'),
+		panel: token('--panel-raised', '#150d20'),
+		hairline: token('--hairline-strong', 'rgba(196, 162, 255, 0.22)')
 	}
 }
 
@@ -77,7 +80,7 @@ export function buildChartData(chart: CaseChart, theme: ChartTheme): ChartData<'
 				data: chart.listeners.data,
 				...line(theme.accent, 'listeners')
 			},
-			{ label: chart.clips.label, data: chart.clips.data, ...line(theme.blue, 'clips') }
+			{ label: chart.clips.label, data: chart.clips.data, ...line(theme.cyan, 'clips') }
 		]
 	}
 }
@@ -112,7 +115,7 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 				callbacks: {
 					label: context => `${context.dataset.label}: ${full.format(context.parsed.y ?? 0)}`,
 					// Значение красится в цвет своей линии — легенды нет, различать надо здесь
-					labelTextColor: context => (context.datasetIndex === 0 ? theme.accent : theme.blue)
+					labelTextColor: context => (context.datasetIndex === 0 ? theme.accentText : theme.cyan)
 				}
 			}
 		},

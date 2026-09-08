@@ -20,7 +20,7 @@ export const SITE_ORIGIN = new URL(SITE_URL).origin
 export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/ondafame'
 
 export const BRAND = {
-	/** Логотип разрезан по начертанию: «onda» белым, «FAME» зелёным */
+	/** Логотип разрезан по начертанию: «onda» белым, «FAME» фиолетовым */
 	wordmarkLight: 'onda',
 	wordmarkAccent: 'FAME',
 	fullName: 'ONDA FAME',

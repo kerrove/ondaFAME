@@ -1,3 +1,4 @@
+import { ImagesConfig } from '@/configs/images.config'
 import type { TeamMember } from '@/types'
 
 /**
@@ -5,23 +6,23 @@ import type { TeamMember } from '@/types'
  * в фирменной плитке. Чтобы подставить портрет, положите файл в /public/team и укажите путь в photo.
  */
 export const TEAM: TeamMember[] = [
-	{ id: 'deruga', name: 'Андрей Деруга', role: 'Генеральный директор', photo: null },
+	{ id: 'nazar', name: 'Назар Потапов', role: 'Генеральный директор', photo: ImagesConfig.NAZAR },
 	{
-		id: 'globa',
-		name: 'Александр Глоба',
+		id: 'yakovlev',
+		name: 'Александр Яковлев',
 		role: 'Ведущий специалист таргетированной рекламы',
-		photo: null
+		photo: ImagesConfig.YAKOVLEV
 	},
 	{
-		id: 'fernandes',
-		name: 'Геннадий Фернандес',
+		id: 'semernikov',
+		name: 'Владислав Семерников',
 		role: 'Специалист технической поддержки',
-		photo: null
+		photo: ImagesConfig.SEMERNIKOV
 	},
 	{
 		id: 'shutikov',
 		name: 'Александр Шутиков',
 		role: 'Специалист технической поддержки',
-		photo: null
+		photo: ImagesConfig.SHUTIKOV
 	}
 ]

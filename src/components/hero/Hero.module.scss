@@ -40,11 +40,12 @@
 	border-radius: var(--radius-pill);
 }
 
-/* Зелёный сегмент бежит по кольцу — сигнал, идущий по кругу */
+/* Фиолетовый сегмент бежит по кольцу — сигнал, идущий по кругу */
+/* Кольцо само светится, поэтому берёт светлую ступень: ядро на чёрном гаснет и перестаёт быть неоном */
 .ringArc {
-	border: 2px solid var(--accent);
+	border: 2px solid var(--accent-text);
 	mask-image: conic-gradient(#000 0deg 100deg, transparent 100deg 360deg);
-	filter: drop-shadow(0 0 6px var(--accent-glow));
+	filter: drop-shadow(0 0 8px var(--accent-glow));
 	animation: spin 3.2s linear infinite;
 }
 

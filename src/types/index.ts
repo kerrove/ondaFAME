@@ -43,8 +43,8 @@ export interface CaseStudy {
 	track: string
 	tag: string
 	description: string
-	/** Путь к аватару в /public. null — портрет ещё не передан, рисуем инициалы. */
-	avatar: string | null
+	/** Обложка релиза в /public. null — артворк ещё не передан, рисуем инициалы. */
+	cover: string | null
 	metrics: CaseMetric[]
 	chart: CaseChart
 }

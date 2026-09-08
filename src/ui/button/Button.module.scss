@@ -31,16 +31,21 @@
 	font-size: 1.0625rem;
 }
 
+/* Текст на заливке белый, поэтому заливка — тёмная ступень акцента: 5.7:1 против 4.2:1 у ядра */
 .primary {
-	background: var(--accent);
-	color: var(--void);
-	/* Тень со смещением по Y, а не ровный ореол */
-	box-shadow: 0 8px 24px -10px var(--accent-glow);
+	background: var(--accent-fill);
+	color: var(--foreground);
+	/* Тень со смещением по Y, а не ровный ореол. Верхняя кромка ловит тот же блик, что и панели */
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.2),
+		0 8px 24px -10px var(--accent-glow);
 }
 
 .primary:hover {
-	background: var(--accent-strong);
-	box-shadow: 0 12px 30px -10px var(--accent-glow);
+	background: var(--accent-fill-hover);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.2),
+		0 12px 30px -10px var(--accent-glow);
 }
 
 .ghost {

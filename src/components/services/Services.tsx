@@ -26,9 +26,9 @@ export function Services() {
 				>
 					{SERVICES.map((service, index) => (
 						<ServiceCard
-							key={service.id}
-							service={service}
 							position={index + 1}
+							service={service}
+							key={service.id}
 						/>
 					))}
 				</Carousel>

@@ -7,7 +7,11 @@ interface Props {
 	name: string
 	src: string | null
 	size: number
-	shape?: 'square' | 'circle'
+	/**
+	 * square — плитка портрета, circle — аватар профиля, tile — обложка релиза,
+	 * plain — своего скругления нет: кадр обрезает родительская оправа.
+	 */
+	shape?: 'square' | 'circle' | 'tile' | 'plain'
 	className?: string
 	/** Портрет уже подписан именем рядом — от скринридера его прячем */
 	decorative?: boolean

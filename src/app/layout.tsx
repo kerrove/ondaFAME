@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 
 import './globals.css'
+import { Footer } from '@/components/footer/Footer'
+import { Header } from '@/components/header/Header'
 import { BRAND, SITE_ORIGIN, SITE_URL, TELEGRAM_URL } from '@/constants/site'
 import { MotionProvider } from '@/providers/motion-provider/MotionProvider'
 
@@ -97,7 +99,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 				>
 					Перейти к основному содержимому
 				</a>
-				<MotionProvider>{children}</MotionProvider>
+				<MotionProvider>
+					<Header />
+					<main id='main'>{children}</main>
+					<Footer />
+				</MotionProvider>
 				<script
 					type='application/ld+json'
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}

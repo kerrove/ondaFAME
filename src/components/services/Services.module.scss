@@ -27,8 +27,25 @@
 	mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000, transparent 75%);
 }
 
+/* Фирменный блик по верхней кромке — тот же источник света, что и на карточке кейса */
+.card::after {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	height: 1px;
+	pointer-events: none;
+	background: var(--lit-edge);
+	opacity: 0.6;
+	transition: opacity 0.25s var(--ease-out);
+}
+
 .card:hover {
 	border-color: var(--hairline-strong);
+}
+
+.card:hover::after {
+	opacity: 1;
 }
 
 .icon {
