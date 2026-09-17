@@ -1,0 +1,99 @@
+.strip {
+	--logo-gap: 2.75rem;
+
+	position: relative;
+	overflow: hidden;
+	padding-block: clamp(1.125rem, 3vw, 1.5rem);
+	border-block: 1px solid var(--hairline);
+	/*
+	 * Пока лента за кадром, браузер не отрисовывает её вовсе — ни тридцати знаков, ни
+	 * бесконечной анимации. Резерв высоты равен реальной: 64px до 768px и 76px выше.
+	 */
+	content-visibility: auto;
+	contain-intrinsic-size: auto 4rem;
+	/* Лента не упирается в края экрана, а истаивает — тогда движение читается как бесконечное */
+	mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+
+.track {
+	display: flex;
+	width: max-content;
+	/* Время на одну копию: с четырьмя копиями цикл длиннее, скорость остаётся прежней */
+	animation: run 36s linear infinite;
+}
+
+.group {
+	display: flex;
+	align-items: center;
+	gap: var(--logo-gap);
+	/* Половина промежутка с каждой стороны: на стыке копий шаг остаётся прежним */
+	padding-inline: calc(var(--logo-gap) / 2);
+}
+
+.item {
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	color: var(--muted);
+	white-space: nowrap;
+}
+
+.glyph {
+	flex: none;
+	display: block;
+}
+
+.glyph svg {
+	height: 100%;
+	width: auto;
+}
+
+.name {
+	font-size: 1rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+/* Сдвиг ровно на одну копию: их число приходит из разметки, поэтому шаг не может разъехаться */
+@keyframes run {
+	to {
+		translate: calc(-100% / var(--copies)) 0;
+	}
+}
+
+@media (min-width: 768px) {
+	.strip {
+		--logo-gap: 4.5rem;
+		contain-intrinsic-size: auto 4.75rem;
+	}
+}
+
+/*
+ * При запросе на покой лента замирает. Оставить одну копию и дать ряду перенос — единственный
+ * способ показать все площадки без движения.
+ */
+@media (prefers-reduced-motion: reduce) {
+	.strip {
+		mask-image: none;
+		/* Ряд с переносом выше одной строки, а гасить нечего: анимации здесь всё равно нет */
+		content-visibility: visible;
+	}
+
+	.track {
+		width: 100%;
+		animation: none;
+	}
+
+	.group {
+		flex-wrap: wrap;
+		justify-content: center;
+		row-gap: 1rem;
+		width: min(100% - 2 * var(--gutter), var(--container));
+		margin-inline: auto;
+		padding-inline: 0;
+	}
+
+	.group[aria-hidden='true'] {
+		display: none;
+	}
+}

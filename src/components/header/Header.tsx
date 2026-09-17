@@ -12,6 +12,8 @@ export function Header() {
 				<Link
 					className={styles.brand}
 					href='/'
+					// Маршрут и так открыт: префетч самого себя тянет лишний RSC-ответ
+					prefetch={false}
 					aria-label='ondaFAME, на главную'
 				>
 					<Logo />

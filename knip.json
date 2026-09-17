@@ -1,11 +1,6 @@
 {
 	"$schema": "https://unpkg.com/knip@5/schema.json",
 	"project": ["src/**/*.ts", "src/**/*.tsx"],
-	"ignoreDependencies": ["sharp", "depcheck", "ts-node", "tailwindcss", "postcss"],
-	"ignore": [
-		"./node_modules/**",
-		"./messages/**",
-		"./public/**",
-		"./.next/**"
-	]
+	"ignoreDependencies": ["sharp", "depcheck"],
+	"ignore": ["./node_modules/**", "./public/**", "./.next/**"]
 }

@@ -2,11 +2,13 @@ import { Award, CircleCheck, ShieldCheck } from 'lucide-react'
 import type { ComponentType } from 'react'
 
 import styles from './Hero.module.scss'
+import { ListenersPlaque } from '@/components/listeners-plaque/ListenersPlaque'
 import { HERO_BADGES } from '@/constants/services'
 import { CTA_LABEL, CTA_NOTE, TELEGRAM_URL } from '@/constants/site'
 import type { BadgeIcon } from '@/types'
 import { Button } from '@/ui/button/Button'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
+import { ScrollCue } from '@/ui/scroll-cue/ScrollCue'
 
 const ICONS: Record<BadgeIcon, ComponentType<{ size?: number; 'aria-hidden'?: 'true' }>> = {
 	award: Award,
@@ -20,13 +22,9 @@ export function Hero() {
 			<GridBackdrop variant='spotlight' />
 
 			<div className={styles.inner}>
-				{/* Кольцо-осциллограф: единственный движущийся элемент первого экрана, чистый CSS */}
-				<div
-					className={styles.ring}
-					aria-hidden='true'
-				>
-					<span className={styles.ringArc} />
-					<span className={styles.ringPulse} />
+				{/* Табло: счётчик слушателей идёт по кругу и показывает рост, а не ожидание */}
+				<div className={styles.gauge}>
+					<ListenersPlaque />
 				</div>
 
 				<h1 className={styles.title}>Пора выходить из тени</h1>
@@ -63,6 +61,11 @@ export function Hero() {
 						{CTA_LABEL}
 					</Button>
 					<p className={styles.note}>{CTA_NOTE}</p>
+
+					<ScrollCue
+						href='#services'
+						label='Листай вниз — к услугам'
+					/>
 				</div>
 			</div>
 		</section>

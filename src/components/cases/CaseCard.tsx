@@ -1,5 +1,6 @@
 import { CaseChartLoader } from './CaseChartLoader'
 import styles from './Cases.module.scss'
+import { ChartTable } from './ChartTable'
 import type { CaseStudy } from '@/types'
 import { Avatar } from '@/ui/avatar/Avatar'
 import { Reveal } from '@/ui/reveal/Reveal'
@@ -36,7 +37,7 @@ export function CaseCard({ study, position }: Props) {
 						className={styles.cover}
 						decorative
 					/>
-					<div>
+					<div className={styles.identityText}>
 						<p className={styles.tag}>{study.tag}</p>
 						<h3
 							className={styles.title}
@@ -67,10 +68,12 @@ export function CaseCard({ study, position }: Props) {
 				</ul>
 			</div>
 
-			<CaseChartLoader
-				chart={study.chart}
-				caption={`${title}: рост по месяцам`}
-			/>
+			<CaseChartLoader chart={study.chart}>
+				<ChartTable
+					chart={study.chart}
+					caption={`${title}: рост по месяцам`}
+				/>
+			</CaseChartLoader>
 		</Reveal>
 	)
 }

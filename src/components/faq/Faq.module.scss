@@ -25,12 +25,28 @@
 	transition: border-color 0.25s var(--ease-out);
 }
 
-.item.open {
+.item:has([open]) {
 	border-color: color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
-.questionRow {
-	font: inherit;
+/*
+ * Раскрытие живёт в браузере, а не в React: details работает без JS, отдаёт ответ в разметке
+ * и сам объявляет состояние. Анимацию высоты умеют не все движки — там, где нет
+ * ::details-content, ответ просто появляется сразу.
+ */
+/* Обрезка живёт на ::details-content: на самом details она срезала бы кольцо фокуса у вопроса */
+@supports selector(details::details-content) {
+	.disclosure::details-content {
+		block-size: 0;
+		overflow: hidden;
+		transition:
+			block-size 0.34s var(--ease-out),
+			content-visibility 0.34s allow-discrete;
+	}
+
+	.disclosure[open]::details-content {
+		block-size: auto;
+	}
 }
 
 .question {
@@ -40,9 +56,9 @@
 	gap: 1.25rem;
 	width: 100%;
 	padding: 1.375rem 1.25rem;
-	background: none;
-	border: 0;
 	cursor: pointer;
+	/* Родная стрелка disclosure не нужна: состояние показывает плитка справа */
+	list-style: none;
 	text-align: left;
 	font-size: 1rem;
 	font-weight: 600;
@@ -51,9 +67,33 @@
 	transition: color 0.2s var(--ease-out);
 }
 
-.item.open .question {
+.question::-webkit-details-marker {
+	display: none;
+}
+
+/* Текст вопроса обязан ужиматься рядом с плиткой, иначе длинное слово вылезает за карточку */
+.questionText {
+	min-width: 0;
+}
+
+.disclosure[open] .question {
 	color: var(--accent-text);
 	padding-bottom: 0.75rem;
+}
+
+/* Крестик и плюс лежат друг на друге: видно ровно один, и плитка не меняет размер */
+.iconClosed,
+.iconOpen {
+	grid-area: 1 / 1;
+}
+
+.iconOpen,
+.disclosure[open] .iconClosed {
+	display: none;
+}
+
+.disclosure[open] .iconOpen {
+	display: block;
 }
 
 .toggle {
@@ -72,10 +112,6 @@
 
 .question:hover .toggle {
 	color: var(--foreground);
-}
-
-.answerWrap {
-	overflow: hidden;
 }
 
 .answer {

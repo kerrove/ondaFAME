@@ -1,3 +1,5 @@
+import clsx from 'clsx'
+
 import { ServiceCard } from './ServiceCard'
 import styles from './Services.module.scss'
 import { SERVICES } from '@/constants/services'
@@ -7,7 +9,7 @@ export function Services() {
 	return (
 		<section
 			id='services'
-			className='section'
+			className={clsx('section', styles.section)}
 			aria-labelledby='services-title'
 			itemScope
 			itemType='https://schema.org/ItemList'

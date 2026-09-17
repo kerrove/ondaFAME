@@ -1,8 +1,3 @@
-'use client'
-
-import clsx from 'clsx'
-import { AnimatePresence } from 'framer-motion'
-import * as m from 'framer-motion/m'
 import { Plus, X } from 'lucide-react'
 
 import styles from './Faq.module.scss'
@@ -11,60 +6,48 @@ import { Reveal } from '@/ui/reveal/Reveal'
 
 interface Props {
 	item: FaqItemData
-	open: boolean
-	onToggle: () => void
-	/** Позиция в списке: задаёт ступень появления при скролле */
+	/** Позиция в списке: задаёт ступень появления при скролле и раскрывает первый вопрос */
 	index: number
 }
 
-/** Тупой компонент: только разметка одного вопроса, состояние приходит сверху. */
-export function FaqItem({ item, open, onToggle, index }: Props) {
+/**
+ * Нативный disclosure вместо самодельного аккордеона: работает без JS, отдаёт ответ в разметке
+ * с первого байта и сам держит семантику раскрытия. Атрибут name делает список
+ * взаимоисключающим там, где браузер это умеет; где не умеет — вопросы открываются независимо,
+ * и это единственное, что теряется.
+ */
+export function FaqItem({ item, index }: Props) {
 	return (
 		<Reveal
 			as='li'
 			motion='settle'
 			index={index}
-			className={clsx(styles.item, open && styles.open)}
+			className={styles.item}
 		>
-			<h3 className={styles.questionRow}>
-				<button
-					type='button'
-					className={styles.question}
-					aria-expanded={open}
-					aria-controls={`faq-answer-${item.id}`}
-					id={`faq-question-${item.id}`}
-					onClick={onToggle}
-				>
-					<span>{item.question}</span>
+			<details
+				className={styles.disclosure}
+				name='faq'
+				open={index === 0}
+			>
+				<summary className={styles.question}>
+					<span className={styles.questionText}>{item.question}</span>
 					<span
 						className={styles.toggle}
 						aria-hidden='true'
 					>
-						{open ? <X size={16} /> : <Plus size={16} />}
+						<Plus
+							className={styles.iconClosed}
+							size={16}
+						/>
+						<X
+							className={styles.iconOpen}
+							size={16}
+						/>
 					</span>
-				</button>
-			</h3>
+				</summary>
 
-			<AnimatePresence initial={false}>
-				{open ? (
-					<m.div
-						key='answer'
-						className={styles.answerWrap}
-						initial={{ height: 0, opacity: 0 }}
-						animate={{ height: 'auto', opacity: 1 }}
-						exit={{ height: 0, opacity: 0 }}
-						transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-					>
-						<div
-							id={`faq-answer-${item.id}`}
-							role='region'
-							aria-labelledby={`faq-question-${item.id}`}
-						>
-							<p className={styles.answer}>{item.answer}</p>
-						</div>
-					</m.div>
-				) : null}
-			</AnimatePresence>
+				<p className={styles.answer}>{item.answer}</p>
+			</details>
 		</Reveal>
 	)
 }

@@ -1,6 +1,13 @@
+/* Ниже 380px две колонки дают 137px на карточку: должность рассыпается на четыре строки */
 .track {
-	grid-auto-columns: calc((100% - 1.25rem) / 2);
+	grid-auto-columns: 74%;
 	align-items: start;
+}
+
+@media (min-width: 380px) {
+	.track {
+		grid-auto-columns: calc((100% - 1.25rem) / 2);
+	}
 }
 
 .member {

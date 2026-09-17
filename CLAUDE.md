@@ -16,11 +16,23 @@ bun run dev-local  # same, with --turbopack
 bun run build      # prebuild runs `rimraf .next`, then next build via real node (see below)
 bun run start      # next start (requires a prior build)
 bun run prod       # build + start on 0.0.0.0:3000
-bun run lint       # bare `eslint` (flat config), not `next lint`
+bun run lint       # bare `eslint` (flat config), not `next lint` — СЕЙЧАС ПАДАЕТ, см. ниже
 bun run format     # prettier --write "src/**/*.{ts,tsx}"
 bun run check      # knip --config ./knip.json — unused files/exports/deps
 bunx tsc --noEmit  # typecheck; there is no `typecheck` script
 ```
+
+**`bun run lint` не работает на TypeScript 7.** Проект стоит на `typescript@^7.0.2` — это нативный
+компилятор, который не отдаёт старый JS API. `eslint-config-next` тянет `typescript-eslint@8`, тот
+жёстко падает на этапе импорта (`typescript-eslint does not support TS 7.0`), поэтому валится весь
+конфиг ESLint, а не отдельные правила. Проверка типов при этом в порядке и стала быстрее: `bunx tsc
+--noEmit` ~0.6 с, проверка внутри `next build` ~0.5 с против 2.6 с на TS 6. Не чинить обходными
+путями в `eslint.config.mjs` — линт вернётся сам, когда выйдет typescript-eslint с поддержкой TS 7
+(https://github.com/typescript-eslint/typescript-eslint/issues/10940). Если линт нужен прямо сейчас,
+есть ровно два пути: откатить `typescript` на `^6.0.3` (там всё зелёное) либо поставить связку
+Microsoft — `"@typescript/native": "npm:typescript@^7.0.2"` плюс
+`"typescript": "npm:@typescript/typescript6@^6.0.2"`, тогда `tsc` остаётся нативным, а ESLint,
+`next build` и редактор работают через API TS 6.
 
 **Static export is conditional.** `next.config.ts` turns on `output: 'export'` + `basePath` only when
 `GITHUB_PAGES=true` (set by `.github/workflows/nextjs.yml`, which deploys to GitHub Pages). Do not

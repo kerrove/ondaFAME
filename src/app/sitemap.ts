@@ -8,11 +8,18 @@ import { SITE_URL } from '@/constants/site'
  */
 export const dynamic = 'force-static'
 
+/**
+ * Дата последней правки контента, а не сборки. `new Date()` здесь выдавал бы новое значение
+ * после каждого деплоя — поисковик видел бы «страница обновляется постоянно», перепроверял её
+ * впустую и переставал доверять сигналу. Менять руками вместе с текстом страницы.
+ */
+const CONTENT_UPDATED_AT = new Date('2026-09-18')
+
 export default function sitemap(): MetadataRoute.Sitemap {
 	return [
 		{
 			url: `${SITE_URL}/`,
-			lastModified: new Date(),
+			lastModified: CONTENT_UPDATED_AT,
 			changeFrequency: 'monthly',
 			priority: 1
 		}

@@ -10,7 +10,7 @@ export const TEAM: TeamMember[] = [
 	{
 		id: 'yakovlev',
 		name: 'Александр Яковлев',
-		role: 'Ведущий специалист таргетированной рекламы',
+		role: 'Lead-таргетолог, ведущий специалист таргетированной рекламы',
 		photo: ImagesConfig.YAKOVLEV
 	},
 	{
@@ -22,7 +22,25 @@ export const TEAM: TeamMember[] = [
 	{
 		id: 'shutikov',
 		name: 'Александр Шутиков',
-		role: 'Специалист технической поддержки',
+		role: 'Креативный директор, руководитель по работе с блогерами и инфлюенсерами',
 		photo: ImagesConfig.SHUTIKOV
+	},
+	{
+		id: 'shvechihin',
+		name: 'Стас Швечихин',
+		role: 'Дизайнер проекта. Ключевые визуальные решения для Артистов и Клиентов агентства',
+		photo: ImagesConfig.SHVECHIHIN
+	},
+	{
+		id: 'cherednichenko',
+		name: 'Мария Чередниченко',
+		role: 'ведущий SMM-менеджер ',
+		photo: ImagesConfig.CHEREDNICHENKO
+	},
+	{
+		id: 'cooper',
+		name: 'Daniel Cooper',
+		role: 'гражданин США директор по стратегическим партнерствам и коллаборациям ',
+		photo: ImagesConfig.COOPER
 	}
 ]

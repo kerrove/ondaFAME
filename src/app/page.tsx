@@ -1,7 +1,9 @@
+import { Aggregators } from '@/components/aggregators/Aggregators'
 import { Cases } from '@/components/cases/Cases'
 import { CtaBand } from '@/components/cta-band/CtaBand'
 import { Faq } from '@/components/faq/Faq'
 import { Hero } from '@/components/hero/Hero'
+import { Quote } from '@/components/quote/Quote'
 import { Services } from '@/components/services/Services'
 import { Team } from '@/components/team/Team'
 
@@ -9,8 +11,16 @@ export default function HomePage() {
 	return (
 		<>
 			<Hero />
+			<Aggregators />
 			<Services />
 			<Cases />
+
+			<Quote
+				lead='«Всегда заходи в воду чуть дальше, чем можешь. И когда ноги перестают доставать до дна —'
+				accent='вот тогда ты в нужном месте, чтобы сделать что-то стоящее.»'
+				author='Дэвид Боуи'
+				source='Интервью для документального фильма BBC «Inspirations», 1997'
+			/>
 
 			<CtaBand
 				id='cta-pricing'

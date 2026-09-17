@@ -1,4 +1,15 @@
-export type ServiceIcon = 'producing' | 'bloggers' | 'smm'
+export type ServiceIcon =
+	| 'producing'
+	| 'bloggers'
+	| 'smm'
+	| 'target'
+	| 'playlists'
+	| 'virality'
+	| 'seo'
+	| 'charts'
+	| 'turnkey'
+	| 'seeding'
+	| 'massposting'
 
 export type BadgeIcon = 'award' | 'shield' | 'report'
 
@@ -66,4 +77,14 @@ export interface FaqItem {
 export interface NavLink {
 	href: string
 	label: string
+}
+
+export type AggregatorId =
+	'vk-music' | 'yandex-music' | 'spotify' | 'apple-music' | 'zvonko' | 'tiktok'
+
+export interface Aggregator {
+	id: AggregatorId
+	name: string
+	/** Оптическая высота знака в rem: у знаков разная плотность, одинаковая высота их ломает */
+	height: number
 }

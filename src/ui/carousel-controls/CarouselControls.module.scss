@@ -35,3 +35,12 @@
 	opacity: 0.4;
 	cursor: not-allowed;
 }
+
+/* В системной палитре недоступность показывает GrayText, а прозрачность только прячет кнопку */
+@media (forced-colors: active) {
+	.arrow:disabled {
+		opacity: 1;
+		color: GrayText;
+		border-color: GrayText;
+	}
+}

@@ -1,0 +1,123 @@
+.gauge {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	max-width: 100%;
+}
+
+.plaque {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 0;
+	padding: clamp(0.875rem, 3vw, 1.25rem) clamp(1.125rem, 4vw, 2rem);
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-panel);
+	background: var(--panel);
+	/* Импульс по кромке уходит за край панели, если его не обрезать по её форме */
+	overflow: hidden;
+	/* Свет со сцены падает на табло снизу: смещение по Y, а не ровный ореол */
+	box-shadow: 0 18px 44px -26px var(--accent-glow);
+}
+
+/* Импульс пробегает по кромке, когда табло делает шаг */
+.spark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40%;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--accent-text), transparent);
+	opacity: 0;
+	animation: sweep 1.05s var(--ease-out) both;
+}
+
+@keyframes sweep {
+	from {
+		translate: -55% 0;
+		opacity: 0;
+	}
+	30% {
+		opacity: 0.9;
+	}
+	to {
+		translate: 210% 0;
+		opacity: 0;
+	}
+}
+
+/* Та же лампа, что и на карточках: блик по верхней кромке, никогда не цветная рамка */
+.plaque::after {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	height: 1px;
+	background: var(--lit-edge);
+}
+
+.value {
+	color: var(--accent-text);
+	font-size: clamp(1.625rem, 6.5vw, 3rem);
+	font-weight: 800;
+}
+
+.label {
+	color: var(--muted);
+	font-size: clamp(0.8125rem, 2.4vw, 1.0625rem);
+	font-weight: 500;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+
+/* Стрелка роста: поднимается и гаснет — это тик прибора, а не значок */
+.trend {
+	flex: none;
+	display: grid;
+	place-items: center;
+	width: clamp(2.5rem, 8vw, 3rem);
+	aspect-ratio: 1;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-pill);
+	background: var(--panel-raised);
+	color: var(--accent-text);
+	box-shadow: 0 10px 24px -14px var(--accent-glow);
+}
+
+.trend svg {
+	animation: uptick 1.6s var(--ease-out) infinite;
+}
+
+@keyframes uptick {
+	0% {
+		opacity: 0.2;
+		translate: 0 0.4em;
+	}
+	40% {
+		opacity: 1;
+		translate: 0 0;
+	}
+	100% {
+		opacity: 0.2;
+		translate: 0 -0.4em;
+	}
+}
+
+@media (min-width: 640px) {
+	.gauge {
+		gap: 1rem;
+	}
+
+	.plaque {
+		flex-direction: row;
+		align-items: flex-end;
+		gap: 1rem;
+	}
+
+	/* Подпись садится на базовую линию числа: нижний край знакоместа лежит чуть ниже неё */
+	.label {
+		padding-bottom: 0.1rem;
+	}
+}

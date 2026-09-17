@@ -1,0 +1,80 @@
+.odometer {
+	/*
+	 * Окно барабана по высоте цифры, а не по всей строке: иначе в момент прокрутки видно
+	 * разом и приходящий, и уходящий знак, между ними зияет просвет, и вместо ленты
+	 * получается наложение.
+	 */
+	--window: 0.78em;
+	/* Торможение барабана: длинный выкат без отскока */
+	--reel-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+	position: relative;
+	display: block;
+	width: calc(var(--field) * 1em);
+	/* Если владелец задаст ступень в десяток разрядов, поле упрётся в экран, а не вынесет вёрстку */
+	max-width: 100%;
+	height: var(--window);
+	/* Поле растёт вместе с числом, а лишние разряды уезжают за край, а не исчезают рывком */
+	overflow: hidden;
+	transition: width 0.72s var(--ease-out);
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: 'tnum' 1;
+}
+
+/* Знакоместа отсчитываются от правого края: разряд не переезжает, когда число меняет длину */
+.place {
+	position: absolute;
+	top: 0;
+	right: calc(var(--offset) * 1em);
+	width: calc(var(--size) * 1em);
+	height: var(--window);
+	overflow: hidden;
+	text-align: center;
+}
+
+.face {
+	display: block;
+	height: var(--window);
+	line-height: 0.78;
+}
+
+/*
+ * Барабан: верхняя грань — новая цифра, нижняя — старая, между ними те, через которые он
+ * прокручивается. Сдвиг вниз на всю длину ленты выводит новую цифру сверху.
+ */
+.reel {
+	position: absolute;
+	inset-inline: 0;
+	top: calc(-1 * var(--travel) * var(--window));
+	display: block;
+	animation-name: spin;
+	animation-duration: 1.05s;
+	animation-timing-function: var(--reel-ease);
+	animation-delay: var(--delay);
+	animation-fill-mode: both;
+}
+
+/*
+ * Лента идёт ровно и только в конце тормозит: за 72% времени проходит 82% пути. Равномерная
+ * фаза — единственное, в чём читается прокрутка; без неё цифры просто подменяются рывком.
+ * Смаз держится, пока барабан быстрый, и снимается ровно на торможении.
+ */
+@keyframes spin {
+	from {
+		translate: 0 0;
+		filter: blur(0.13em);
+		animation-timing-function: linear;
+	}
+	72% {
+		translate: 0 calc(var(--travel) * var(--window) * 0.82);
+		filter: blur(0.09em);
+		animation-timing-function: var(--reel-ease);
+	}
+	90% {
+		filter: blur(0.02em);
+	}
+	to {
+		translate: 0 calc(var(--travel) * var(--window));
+		filter: blur(0);
+	}
+}

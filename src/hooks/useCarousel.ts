@@ -48,7 +48,13 @@ export function useCarousel(): Carousel {
 
 		const item = track.firstElementChild as HTMLElement | null
 		const gap = parseFloat(getComputedStyle(track).columnGap || '0') || 0
-		const distance = item ? item.offsetWidth + gap : track.clientWidth * 0.8
+		const span = item ? item.offsetWidth + gap : 0
+		/*
+		 * Стрелка листает экран целиком, а не одну колонку: в сетке из двух рядов «вперёд»
+		 * должно открывать следующую страницу карточек, иначе до последних надо кликать трижды.
+		 */
+		const perView = span > 0 ? Math.max(1, Math.round(track.clientWidth / span)) : 1
+		const distance = span > 0 ? span * perView : track.clientWidth * 0.8
 
 		track.scrollBy({ left: distance * direction, behavior: 'smooth' })
 	}

@@ -8,10 +8,14 @@ import { SITE_URL } from '@/constants/site'
  */
 export const dynamic = 'force-static'
 
+/*
+ * Директивы host здесь нет намеренно. Google её не читает никогда, Яндекс отказался от неё
+ * в 2018-м, а на GitHub Pages SITE_URL содержит подкаталог (/<repo>) — host с путём невалиден
+ * по самой её спецификации. Строка, которую никто не исполняет, только вводит в заблуждение.
+ */
 export default function robots(): MetadataRoute.Robots {
 	return {
 		rules: { userAgent: '*', allow: '/' },
-		sitemap: `${SITE_URL}/sitemap.xml`,
-		host: SITE_URL
+		sitemap: `${SITE_URL}/sitemap.xml`
 	}
 }

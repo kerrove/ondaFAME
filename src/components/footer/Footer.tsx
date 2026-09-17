@@ -1,7 +1,8 @@
 import clsx from 'clsx'
+import { Mail, MapPin, Phone } from 'lucide-react'
 
 import styles from './Footer.module.scss'
-import { BRAND, NAV_LINKS, TELEGRAM_URL } from '@/constants/site'
+import { BRAND, CONTACTS, NAV_LINKS, TELEGRAM_URL } from '@/constants/site'
 import { Logo } from '@/ui/logo/Logo'
 import { Reveal } from '@/ui/reveal/Reveal'
 
@@ -41,6 +42,36 @@ export function Footer() {
 						</li>
 					</ul>
 				</nav>
+
+				<address className={styles.contacts}>
+					<p className={styles.contact}>
+						<MapPin
+							size={16}
+							aria-hidden='true'
+						/>
+						<span>{CONTACTS.address}</span>
+					</p>
+					<a
+						className={clsx(styles.contact, styles.contactLink)}
+						href={CONTACTS.phoneHref}
+					>
+						<Phone
+							size={16}
+							aria-hidden='true'
+						/>
+						<span>{CONTACTS.phone}</span>
+					</a>
+					<a
+						className={clsx(styles.contact, styles.contactLink)}
+						href={`mailto:${CONTACTS.email}`}
+					>
+						<Mail
+							size={16}
+							aria-hidden='true'
+						/>
+						<span>{CONTACTS.email}</span>
+					</a>
+				</address>
 			</Reveal>
 
 			<div className={clsx('container', styles.bottom)}>

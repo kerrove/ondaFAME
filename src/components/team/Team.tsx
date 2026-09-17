@@ -24,9 +24,9 @@ export function Team() {
 				<Carousel
 					id='team-track'
 					headingId='team-title'
-					title='Команда'
+					title='Наша команда'
 					description='Мы собрали людей, которые любят музыку и умеют делать её заметной.'
-					label='Команда'
+					label='Наша команда'
 					listClassName={styles.track}
 				>
 					{TEAM.map((member, index) => (

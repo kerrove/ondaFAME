@@ -6,5 +6,8 @@ export class ImagesConfig {
 	static readonly YAKOVLEV = asset('/team/yakovlev.avif')
 	static readonly SEMERNIKOV = asset('/team/semernikov.avif')
 	static readonly SHUTIKOV = asset('/team/shutikov.avif')
+	static readonly SHVECHIHIN = asset('/team/shvechihin.avif')
+	static readonly CHEREDNICHENKO = asset('/team/cherednichenko.avif')
+	static readonly COOPER = asset('/team/cooper.avif')
 	static readonly SONG = asset('/song.avif')
 }

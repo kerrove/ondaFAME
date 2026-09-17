@@ -1,4 +1,16 @@
-import { Rocket, Sparkles, Users } from 'lucide-react'
+import {
+	CalendarClock,
+	ChartColumn,
+	Clapperboard,
+	KeyRound,
+	ListMusic,
+	Radio,
+	Rocket,
+	Search,
+	Sparkles,
+	Target,
+	Users
+} from 'lucide-react'
 import type { ComponentType } from 'react'
 
 import styles from './Services.module.scss'
@@ -8,7 +20,15 @@ import { Reveal } from '@/ui/reveal/Reveal'
 const ICONS: Record<ServiceIcon, ComponentType<{ size?: number; 'aria-hidden'?: 'true' }>> = {
 	producing: Rocket,
 	bloggers: Users,
-	smm: Sparkles
+	smm: Sparkles,
+	target: Target,
+	playlists: ListMusic,
+	virality: Clapperboard,
+	seo: Search,
+	charts: ChartColumn,
+	turnkey: KeyRound,
+	seeding: Radio,
+	massposting: CalendarClock
 }
 
 interface Props {

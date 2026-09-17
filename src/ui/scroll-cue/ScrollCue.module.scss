@@ -1,0 +1,31 @@
+.cue {
+	display: grid;
+	place-items: center;
+	/* Зона нажатия 44px даже при маленькой иконке */
+	width: 2.75rem;
+	height: 2.75rem;
+	margin-top: clamp(1.25rem, 3vw, 1.75rem);
+	color: var(--faint);
+	transition: color 0.25s var(--ease-out);
+}
+
+.cue:hover {
+	color: var(--accent-text);
+}
+
+/* Стрелка опускается и тает — жест «листай дальше», а не мигающий значок */
+.cue svg {
+	animation: sink 2.2s var(--ease-out) infinite;
+}
+
+@keyframes sink {
+	0%,
+	100% {
+		translate: 0 -0.2rem;
+		opacity: 0.45;
+	}
+	50% {
+		translate: 0 0.3rem;
+		opacity: 1;
+	}
+}

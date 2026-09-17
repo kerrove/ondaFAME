@@ -14,62 +14,12 @@
 	text-align: center;
 }
 
-/* Кольцо */
-.ring {
-	position: relative;
-	display: grid;
-	place-items: center;
-	width: clamp(4.5rem, 12vw, 6.5rem);
-	aspect-ratio: 1;
+/* Табло слушателей */
+.gauge {
+	display: flex;
+	justify-content: center;
+	max-width: 100%;
 	margin-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-.ringArc,
-.ringPulse {
-	position: absolute;
-	inset: 0;
-	border-radius: var(--radius-pill);
-}
-
-/* Неподвижное основание кольца */
-.ring::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border: 2px solid rgba(255, 255, 255, 0.22);
-	border-radius: var(--radius-pill);
-}
-
-/* Фиолетовый сегмент бежит по кольцу — сигнал, идущий по кругу */
-/* Кольцо само светится, поэтому берёт светлую ступень: ядро на чёрном гаснет и перестаёт быть неоном */
-.ringArc {
-	border: 2px solid var(--accent-text);
-	mask-image: conic-gradient(#000 0deg 100deg, transparent 100deg 360deg);
-	filter: drop-shadow(0 0 8px var(--accent-glow));
-	animation: spin 3.2s linear infinite;
-}
-
-.ringPulse {
-	background: radial-gradient(circle, var(--accent-soft), transparent 68%);
-	animation: pulse 3.2s var(--ease-out) infinite;
-}
-
-@keyframes spin {
-	to {
-		rotate: 360deg;
-	}
-}
-
-@keyframes pulse {
-	0%,
-	100% {
-		opacity: 0.35;
-		scale: 0.9;
-	}
-	50% {
-		opacity: 1;
-		scale: 1.25;
-	}
 }
 
 /* Типографика */

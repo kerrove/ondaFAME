@@ -20,6 +20,8 @@
 .brand {
 	display: inline-flex;
 	align-items: center;
+	/* Цель нажатия, а не строка текста: 44px даже там, где надпись вдвое ниже */
+	min-height: 2.75rem;
 	flex: none;
 }
 
@@ -34,6 +36,9 @@
 }
 
 .link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
 	color: var(--muted);
 	font-size: 0.9375rem;
 	transition: color 0.2s var(--ease-out);

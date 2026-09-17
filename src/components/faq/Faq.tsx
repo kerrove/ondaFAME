@@ -1,5 +1,5 @@
 import styles from './Faq.module.scss'
-import { FaqList } from './FaqList'
+import { FaqItem } from './FaqItem'
 import { FAQ } from '@/constants/faq'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
 import { Reveal } from '@/ui/reveal/Reveal'
@@ -34,7 +34,15 @@ export function Faq() {
 					<p className={styles.description}>Частые вопросы о процессе, сроках и метриках.</p>
 				</Reveal>
 
-				<FaqList items={FAQ} />
+				<ul className={styles.list}>
+					{FAQ.map((item, index) => (
+						<FaqItem
+							key={item.id}
+							item={item}
+							index={index}
+						/>
+					))}
+				</ul>
 			</div>
 
 			<script

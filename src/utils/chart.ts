@@ -1,4 +1,4 @@
-import type { ChartData, Chart as ChartInstance, ChartOptions, Plugin } from 'chart.js'
+import type { ChartData, Chart as ChartInstance, ChartOptions, Plugin, Scale } from 'chart.js'
 
 import type { CaseChart } from '@/types'
 
@@ -85,12 +85,51 @@ export function buildChartData(chart: CaseChart, theme: ChartTheme): ChartData<'
 	}
 }
 
+/**
+ * Ниже этой ширины подписи двух шкал не помещаются: chart.js ограничивает ширину вертикальной
+ * оси долей холста, и «500 тыс.» уезжает за левый край. Правая шкала на таком экране уступает
+ * место левой — значения обеих линий всё равно показывает тултип.
+ */
+const NARROW_CHART = 420
+
+/** Кегль подписей осей */
+const TICK_SIZE = 12
+
+/**
+ * chart.js режет ширину вертикальной оси по своему усмотрению, и самая длинная подпись
+ * («500 тыс.») уезжает за край холста. Здесь ось получает ровно ту ширину, которую занимают
+ * её собственные подписи, измеренные тем же шрифтом, которым будут нарисованы.
+ */
+function fitToLabels(scale: Scale, font: string) {
+	const { ctx } = scale.chart
+
+	ctx.save()
+	ctx.font = `${TICK_SIZE}px ${font}`
+
+	const widest = scale.ticks.reduce(
+		(max, tick) => Math.max(max, ctx.measureText(String(tick.label ?? '')).width),
+		0
+	)
+
+	ctx.restore()
+
+	if (widest > 0) scale.width = Math.max(scale.width, Math.ceil(widest) + 12)
+}
+
 export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): ChartOptions<'line'> {
 	const axisTicks = {
 		color: theme.tick,
-		font: { family: theme.font, size: 12 },
+		font: { family: theme.font, size: TICK_SIZE },
 		maxTicksLimit: 5,
 		callback: (value: string | number) => compact.format(Number(value))
+	}
+
+	const clipsTicks = {
+		...axisTicks,
+		// Пустые подписи chart.js не измеряет, поэтому ось схлопывается и отдаёт ширину графику
+		callback(this: Scale, value: string | number) {
+			return this.chart.width < NARROW_CHART ? '' : compact.format(Number(value))
+		}
 	}
 
 	return {
@@ -123,14 +162,15 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 			x: {
 				grid: { color: theme.grid },
 				border: { display: false },
-				ticks: { color: theme.tick, font: { family: theme.font, size: 12 } }
+				ticks: { color: theme.tick, font: { family: theme.font, size: TICK_SIZE } }
 			},
 			listeners: {
 				type: 'linear',
 				position: 'left',
 				grid: { color: theme.grid },
 				border: { display: false },
-				ticks: axisTicks
+				ticks: axisTicks,
+				afterFit: scale => fitToLabels(scale, theme.font)
 			},
 			clips: {
 				type: 'linear',
@@ -139,7 +179,8 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 				suggestedMax: 200_000,
 				grid: { display: false },
 				border: { display: false },
-				ticks: axisTicks
+				ticks: clipsTicks,
+				afterFit: scale => fitToLabels(scale, theme.font)
 			}
 		}
 	}

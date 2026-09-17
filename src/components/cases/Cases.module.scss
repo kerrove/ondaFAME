@@ -30,12 +30,24 @@
 	min-width: 0;
 }
 
+/*
+ * До 400px обложка встаёт над названием: рядом с ней остаётся полторы сотни пикселей, а
+ * «HOROSHIYAGNI» в одно слово туда не влезает и вылезает за карточку.
+ */
 .identity {
 	position: relative;
 	display: flex;
-	align-items: center;
+	/* Без этого длинное имя артиста распирает строку: у flex-элемента минимум по содержимому */
+	min-width: 0;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 1rem;
 	margin-bottom: 1.5rem;
+}
+
+/* Без этого длинное слово распирает колонку: у flex-элемента минимальная ширина по содержимому */
+.identityText {
+	min-width: 0;
 }
 
 /*
@@ -60,6 +72,7 @@
 }
 
 .title {
+	/* Перенос длинного имени артиста задан глобально (overflow-wrap: anywhere) — здесь не дублируем */
 	font-size: clamp(1.375rem, 3vw, 1.875rem);
 	font-weight: 800;
 	line-height: 1.15;
@@ -139,6 +152,13 @@
 		linear-gradient(to right, var(--grid-line) 1px, transparent 1px) 0 0 / 52px 100%,
 		linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px) 0 0 / 100% 44px,
 		var(--panel-raised);
+}
+
+@media (min-width: 400px) {
+	.identity {
+		flex-direction: row;
+		align-items: center;
+	}
 }
 
 @media (min-width: 640px) {
