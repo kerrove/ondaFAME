@@ -1,24 +1,37 @@
+import clsx from 'clsx'
+import { ArrowUpRight, Music2, Star } from 'lucide-react'
+
 import { CaseChartLoader } from './CaseChartLoader'
 import styles from './Cases.module.scss'
 import { ChartTable } from './ChartTable'
-import type { CaseStudy } from '@/types'
+import type { CaseStudy, SiteContent } from '@/types'
 import { Avatar } from '@/ui/avatar/Avatar'
 import { Reveal } from '@/ui/reveal/Reveal'
 
 interface Props {
 	study: CaseStudy
 	position: number
+	/** Подписи карточки — общие для всех кейсов */
+	labels: Pick<
+		SiteContent['cases'],
+		'cardPrefix' | 'chartCaption' | 'chartMonthColumn' | 'featuredLabel' | 'tiktokLabel'
+	>
 }
 
-export function CaseCard({ study, position }: Props) {
-	const title = `Кейс ${study.artist} — ${study.track}`
+export function CaseCard({ study, position, labels }: Props) {
+	const { cardPrefix, chartCaption, chartMonthColumn, featuredLabel, tiktokLabel } = labels
+	const title = `${cardPrefix} ${study.artist} — ${study.track}`
 
 	return (
 		<Reveal
 			as='li'
 			motion='settle'
 			index={position - 1}
-			className={styles.card}
+			className={clsx(
+				styles.card,
+				study.featured && styles.featured,
+				!study.chart && styles.textOnly
+			)}
 			itemProp='itemListElement'
 			itemScope
 			itemType='https://schema.org/CreativeWork'
@@ -28,6 +41,15 @@ export function CaseCard({ study, position }: Props) {
 				content={String(position)}
 			/>
 			<div className={styles.body}>
+				{study.featured && (
+					<p className={styles.featuredLabel}>
+						<Star
+							size={14}
+							aria-hidden='true'
+						/>
+						{featuredLabel}
+					</p>
+				)}
 				<div className={styles.identity}>
 					<Avatar
 						name={study.artist}
@@ -43,7 +65,7 @@ export function CaseCard({ study, position }: Props) {
 							className={styles.title}
 							itemProp='name'
 						>
-							Кейс {study.artist} — <span className={styles.trackName}>{study.track}</span>
+							{cardPrefix} {study.artist} — <span className={styles.trackName}>{study.track}</span>
 						</h3>
 					</div>
 				</div>
@@ -54,6 +76,26 @@ export function CaseCard({ study, position }: Props) {
 				>
 					{study.description}
 				</p>
+
+				{study.tiktok && (
+					<a
+						className={styles.tiktok}
+						href={study.tiktok}
+						target='_blank'
+						rel='noopener noreferrer'
+						itemProp='url'
+					>
+						<Music2
+							size={16}
+							aria-hidden='true'
+						/>
+						{tiktokLabel}
+						<ArrowUpRight
+							size={16}
+							aria-hidden='true'
+						/>
+					</a>
+				)}
 
 				<ul className={styles.metrics}>
 					{study.metrics.map(metric => (
@@ -68,12 +110,15 @@ export function CaseCard({ study, position }: Props) {
 				</ul>
 			</div>
 
-			<CaseChartLoader chart={study.chart}>
-				<ChartTable
-					chart={study.chart}
-					caption={`${title}: рост по месяцам`}
-				/>
-			</CaseChartLoader>
+			{study.chart && (
+				<CaseChartLoader chart={study.chart}>
+					<ChartTable
+						chart={study.chart}
+						caption={`${title}: ${study.chart.caption ?? chartCaption}`}
+						defaultColumn={chartMonthColumn}
+					/>
+				</CaseChartLoader>
+			)}
 		</Reveal>
 	)
 }

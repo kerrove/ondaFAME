@@ -4,9 +4,33 @@
 }
 
 .inner {
-	width: min(100% - 2 * var(--gutter), 46rem);
+	width: min(100% - 2 * var(--gutter), 60rem);
 	margin-inline: auto;
 	text-align: center;
+}
+
+/* До 768px фото встаёт над цитатой, шире — слева от неё */
+.figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+/* Портрет в своём цвете, под ним то же фиолетовое свечение, что под обложками кейсов */
+.photo {
+	flex: none;
+	width: min(15rem, 70%);
+	height: auto;
+	aspect-ratio: 1;
+	object-fit: cover;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-portrait);
+	box-shadow: 0 24px 48px -28px var(--accent-glow);
+}
+
+.body {
+	min-width: 0;
 }
 
 /* Единственная метка секции — волосяной штрих сигнала, не надзаголовок */
@@ -46,4 +70,23 @@
 	color: var(--faint);
 	font-size: 0.8125rem;
 	font-weight: 400;
+}
+
+@media (min-width: 768px) {
+	.inner {
+		text-align: left;
+	}
+
+	.figure {
+		flex-direction: row;
+		gap: clamp(2rem, 5vw, 3.5rem);
+	}
+
+	.photo {
+		width: clamp(14rem, 26vw, 20rem);
+	}
+
+	.tick {
+		margin-inline: 0;
+	}
 }

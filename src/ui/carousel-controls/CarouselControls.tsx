@@ -8,13 +8,25 @@ interface Props {
 	/** id прокручиваемой ленты — связывает кнопки с областью, которой они управляют */
 	controls: string
 	label: string
+	/** Хвосты подписей стрелок: «Кейсы: назад» */
+	prevLabel: string
+	nextLabel: string
 	canPrev: boolean
 	canNext: boolean
 	onPrev: () => void
 	onNext: () => void
 }
 
-export function CarouselControls({ controls, label, canPrev, canNext, onPrev, onNext }: Props) {
+export function CarouselControls({
+	controls,
+	label,
+	prevLabel,
+	nextLabel,
+	canPrev,
+	canNext,
+	onPrev,
+	onNext
+}: Props) {
 	// Лента помещается целиком — управлять нечем. Место в разметке сохраняем, чтобы
 	// заголовок не прыгал после гидратации, но мёртвых кнопок не показываем.
 	const inert = !canPrev && !canNext
@@ -31,7 +43,7 @@ export function CarouselControls({ controls, label, canPrev, canNext, onPrev, on
 				onClick={onPrev}
 				disabled={!canPrev}
 				aria-controls={controls}
-				aria-label={`${label}: назад`}
+				aria-label={`${label}: ${prevLabel}`}
 			>
 				<ChevronLeft
 					size={20}
@@ -44,7 +56,7 @@ export function CarouselControls({ controls, label, canPrev, canNext, onPrev, on
 				onClick={onNext}
 				disabled={!canNext}
 				aria-controls={controls}
-				aria-label={`${label}: вперёд`}
+				aria-label={`${label}: ${nextLabel}`}
 			>
 				<ChevronRight
 					size={20}

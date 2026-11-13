@@ -1,37 +1,44 @@
 import type { Metadata } from 'next'
 
 import styles from './not-found.module.scss'
-import { CTA_LABEL, TELEGRAM_URL } from '@/constants/site'
+import { getContent } from '@/server/content'
 import { Button } from '@/ui/button/Button'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
 import { Logo } from '@/ui/logo/Logo'
 
-export const metadata: Metadata = {
-	title: 'Страница не найдена',
-	robots: { index: false, follow: true }
+export async function generateMetadata(): Promise<Metadata> {
+	const { notFound } = await getContent()
+
+	return {
+		title: notFound.metaTitle,
+		robots: { index: false, follow: true }
+	}
 }
 
-export default function NotFound() {
+export default async function NotFound() {
+	const { notFound, brand, contacts, cta } = await getContent()
+
 	return (
 		<main className={styles.page}>
 			<GridBackdrop variant='spotlight' />
 
 			<div className={styles.inner}>
-				<Logo />
-				<p className={styles.code}>404</p>
-				<h1 className={styles.title}>Такой страницы нет</h1>
-				<p className={styles.text}>
-					Ссылка устарела или была набрана с ошибкой. Вернитесь на главную — или сразу напишите нам.
-				</p>
+				<Logo
+					light={brand.wordmarkLight}
+					accent={brand.wordmarkAccent}
+				/>
+				<p className={styles.code}>{notFound.code}</p>
+				<h1 className={styles.title}>{notFound.title}</h1>
+				<p className={styles.text}>{notFound.text}</p>
 				<div className={styles.actions}>
 					<Button
 						href='/'
 						variant='ghost'
 						withIcon={false}
 					>
-						На главную
+						{notFound.homeAction}
 					</Button>
-					<Button href={TELEGRAM_URL}>{CTA_LABEL}</Button>
+					<Button href={contacts.telegramUrl}>{cta.label}</Button>
 				</div>
 			</div>
 		</main>

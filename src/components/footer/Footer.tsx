@@ -2,25 +2,30 @@ import clsx from 'clsx'
 import { Mail, MapPin, Phone } from 'lucide-react'
 
 import styles from './Footer.module.scss'
-import { BRAND, CONTACTS, NAV_LINKS, TELEGRAM_URL } from '@/constants/site'
+import { getContent } from '@/server/content'
 import { Logo } from '@/ui/logo/Logo'
 import { Reveal } from '@/ui/reveal/Reveal'
 
-export function Footer() {
+export async function Footer() {
+	const { a11y, brand, contacts, footer, nav } = await getContent()
+
 	return (
 		<footer className={styles.footer}>
 			<Reveal className={clsx('container', styles.inner)}>
 				<div className={styles.brand}>
-					<Logo />
-					<p className={styles.tagline}>{BRAND.tagline}</p>
+					<Logo
+						light={brand.wordmarkLight}
+						accent={brand.wordmarkAccent}
+					/>
+					<p className={styles.tagline}>{brand.tagline}</p>
 				</div>
 
 				<nav
 					className={styles.nav}
-					aria-label='Навигация в подвале'
+					aria-label={a11y.footerNav}
 				>
 					<ul className={styles.list}>
-						{NAV_LINKS.map(link => (
+						{nav.map(link => (
 							<li key={link.href}>
 								<a
 									className={styles.link}
@@ -33,11 +38,11 @@ export function Footer() {
 						<li>
 							<a
 								className={styles.link}
-								href={TELEGRAM_URL}
+								href={contacts.telegramUrl}
 								target='_blank'
 								rel='noopener noreferrer'
 							>
-								Telegram
+								{footer.telegram}
 							</a>
 						</li>
 					</ul>
@@ -49,34 +54,34 @@ export function Footer() {
 							size={16}
 							aria-hidden='true'
 						/>
-						<span>{CONTACTS.address}</span>
+						<span>{contacts.address}</span>
 					</p>
 					<a
 						className={clsx(styles.contact, styles.contactLink)}
-						href={CONTACTS.phoneHref}
+						href={contacts.phoneHref}
 					>
 						<Phone
 							size={16}
 							aria-hidden='true'
 						/>
-						<span>{CONTACTS.phone}</span>
+						<span>{contacts.phone}</span>
 					</a>
 					<a
 						className={clsx(styles.contact, styles.contactLink)}
-						href={`mailto:${CONTACTS.email}`}
+						href={`mailto:${contacts.email}`}
 					>
 						<Mail
 							size={16}
 							aria-hidden='true'
 						/>
-						<span>{CONTACTS.email}</span>
+						<span>{contacts.email}</span>
 					</a>
 				</address>
 			</Reveal>
 
 			<div className={clsx('container', styles.bottom)}>
 				<p>
-					© {new Date().getFullYear()} {BRAND.fullName}
+					© {new Date().getFullYear()} {brand.fullName}
 				</p>
 			</div>
 		</footer>

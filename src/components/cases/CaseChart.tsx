@@ -24,7 +24,7 @@ export function CaseChart({ chart }: Props) {
 		<div className={styles.canvas}>
 			<Line
 				data={buildChartData(chart, theme)}
-				options={buildChartOptions(reduced ?? false, theme)}
+				options={buildChartOptions(reduced ?? false, theme, Boolean(chart.listeners))}
 				plugins={[crosshair(theme)]}
 				aria-hidden='true'
 			/>

@@ -1,46 +1,24 @@
 import { ImagesConfig } from '@/configs/images.config'
-import type { TeamMember } from '@/types'
+import type { SiteContent, TeamMember } from '@/types'
 
 /**
- * Фотографии команды пока не переданы отдельными файлами — до тех пор карточка рисует инициалы
- * в фирменной плитке. Чтобы подставить портрет, положите файл в /public/team и укажите путь в photo.
+ * Портреты подклеиваются к карточке по id. Путь к файлу — не текст, поэтому в content.json его
+ * нет: чтобы подставить портрет, положите файл в /public/team и допишите строку сюда.
+ * Пока фото нет, карточка рисует инициалы фирменной плиткой.
  */
-export const TEAM: TeamMember[] = [
-	{ id: 'nazar', name: 'Назар Потапов', role: 'Генеральный директор', photo: ImagesConfig.NAZAR },
-	{
-		id: 'yakovlev',
-		name: 'Александр Яковлев',
-		role: 'Lead-таргетолог, ведущий специалист таргетированной рекламы',
-		photo: ImagesConfig.YAKOVLEV
-	},
-	{
-		id: 'semernikov',
-		name: 'Владислав Семерников',
-		role: 'Специалист технической поддержки',
-		photo: ImagesConfig.SEMERNIKOV
-	},
-	{
-		id: 'shutikov',
-		name: 'Александр Шутиков',
-		role: 'Креативный директор, руководитель по работе с блогерами и инфлюенсерами',
-		photo: ImagesConfig.SHUTIKOV
-	},
-	{
-		id: 'shvechihin',
-		name: 'Стас Швечихин',
-		role: 'Дизайнер проекта. Ключевые визуальные решения для Артистов и Клиентов агентства',
-		photo: ImagesConfig.SHVECHIHIN
-	},
-	{
-		id: 'cherednichenko',
-		name: 'Мария Чередниченко',
-		role: 'ведущий SMM-менеджер ',
-		photo: ImagesConfig.CHEREDNICHENKO
-	},
-	{
-		id: 'cooper',
-		name: 'Daniel Cooper',
-		role: 'гражданин США директор по стратегическим партнерствам и коллаборациям ',
-		photo: ImagesConfig.COOPER
-	}
-]
+const PHOTOS: Record<string, string | undefined> = {
+	nazar: ImagesConfig.NAZAR,
+	yakovlev: ImagesConfig.YAKOVLEV,
+	semernikov: ImagesConfig.SEMERNIKOV,
+	shutikov: ImagesConfig.SHUTIKOV,
+	shvechihin: ImagesConfig.SHVECHIHIN,
+	cherednichenko: ImagesConfig.CHEREDNICHENKO,
+	cooper: ImagesConfig.COOPER
+}
+
+export function getTeam(content: SiteContent): TeamMember[] {
+	return content.team.members.map(member => ({
+		...member,
+		photo: PHOTOS[member.id] ?? null
+	}))
+}

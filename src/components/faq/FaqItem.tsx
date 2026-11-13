@@ -6,8 +6,10 @@ import { Reveal } from '@/ui/reveal/Reveal'
 
 interface Props {
 	item: FaqItemData
-	/** Позиция в списке: задаёт ступень появления при скролле и раскрывает первый вопрос */
+	/** Позиция в списке: задаёт ступень появления при скролле */
 	index: number
+	/** Вопрос раскрыт при загрузке страницы */
+	defaultOpen: boolean
 }
 
 /**
@@ -16,7 +18,7 @@ interface Props {
  * взаимоисключающим там, где браузер это умеет; где не умеет — вопросы открываются независимо,
  * и это единственное, что теряется.
  */
-export function FaqItem({ item, index }: Props) {
+export function FaqItem({ item, index, defaultOpen }: Props) {
 	return (
 		<Reveal
 			as='li'
@@ -27,7 +29,7 @@ export function FaqItem({ item, index }: Props) {
 			<details
 				className={styles.disclosure}
 				name='faq'
-				open={index === 0}
+				open={defaultOpen}
 			>
 				<summary className={styles.question}>
 					<span className={styles.questionText}>{item.question}</span>

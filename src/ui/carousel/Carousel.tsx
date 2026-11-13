@@ -15,6 +15,9 @@ interface Props {
 	description?: string
 	/** Человекочитаемое имя ленты для подписей стрелок и прокручиваемой области */
 	label: string
+	/** Хвосты подписей стрелок из content.json: клиентский компонент сам тексты не читает */
+	prevLabel: string
+	nextLabel: string
 	listClassName?: string
 	children: ReactNode
 }
@@ -33,6 +36,8 @@ export function Carousel({
 	title,
 	description,
 	label,
+	prevLabel,
+	nextLabel,
 	listClassName,
 	children
 }: Props) {
@@ -48,6 +53,8 @@ export function Carousel({
 					<CarouselControls
 						controls={id}
 						label={label}
+						prevLabel={prevLabel}
+						nextLabel={nextLabel}
 						canPrev={canPrev}
 						canNext={canNext}
 						onPrev={scrollPrev}

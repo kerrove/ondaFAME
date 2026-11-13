@@ -3,20 +3,23 @@ import type { ComponentType } from 'react'
 
 import styles from './Hero.module.scss'
 import { ListenersPlaque } from '@/components/listeners-plaque/ListenersPlaque'
-import { HERO_BADGES } from '@/constants/services'
-import { CTA_LABEL, CTA_NOTE, TELEGRAM_URL } from '@/constants/site'
-import type { BadgeIcon } from '@/types'
+import { getListeners } from '@/constants/listeners'
+import { getContent } from '@/server/content'
+import type { HeroBadgeId } from '@/types'
 import { Button } from '@/ui/button/Button'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
 import { ScrollCue } from '@/ui/scroll-cue/ScrollCue'
 
-const ICONS: Record<BadgeIcon, ComponentType<{ size?: number; 'aria-hidden'?: 'true' }>> = {
-	award: Award,
-	shield: ShieldCheck,
-	report: CircleCheck
+const ICONS: Record<HeroBadgeId, ComponentType<{ size?: number; 'aria-hidden'?: 'true' }>> = {
+	mbw: Award,
+	guarantee: ShieldCheck,
+	reporting: CircleCheck
 }
 
-export function Hero() {
+export async function Hero() {
+	const content = await getContent()
+	const { hero, cta, contacts } = content
+
 	return (
 		<section className={styles.hero}>
 			<GridBackdrop variant='spotlight' />
@@ -24,19 +27,16 @@ export function Hero() {
 			<div className={styles.inner}>
 				{/* Табло: счётчик слушателей идёт по кругу и показывает рост, а не ожидание */}
 				<div className={styles.gauge}>
-					<ListenersPlaque />
+					<ListenersPlaque {...getListeners(content)} />
 				</div>
 
-				<h1 className={styles.title}>Пора выходить из тени</h1>
+				<h1 className={styles.title}>{hero.title}</h1>
 
-				<p className={styles.lead}>
-					Первое маркетинговое агентство полного цикла с гарантией результата. Мы сделаем так, чтобы
-					твою музыку заметили.
-				</p>
+				<p className={styles.lead}>{hero.lead}</p>
 
 				<ul className={styles.badges}>
-					{HERO_BADGES.map(badge => {
-						const Icon = ICONS[badge.icon]
+					{hero.badges.map(badge => {
+						const Icon = ICONS[badge.id]
 
 						return (
 							<li
@@ -55,16 +55,16 @@ export function Hero() {
 
 				<div className={styles.action}>
 					<Button
-						href={TELEGRAM_URL}
+						href={contacts.telegramUrl}
 						size='lg'
 					>
-						{CTA_LABEL}
+						{cta.label}
 					</Button>
-					<p className={styles.note}>{CTA_NOTE}</p>
+					<p className={styles.note}>{cta.note}</p>
 
 					<ScrollCue
 						href='#services'
-						label='Листай вниз — к услугам'
+						label={hero.scrollCue}
 					/>
 				</div>
 			</div>

@@ -1,7 +1,9 @@
 import type { CSSProperties } from 'react'
 
 import styles from './Aggregators.module.scss'
-import { AGGREGATORS } from '@/constants/aggregators'
+import { getAggregators } from '@/constants/aggregators'
+import { getContent } from '@/server/content'
+import type { Aggregator } from '@/types'
 import { BrandGlyph } from '@/ui/brand-glyph/BrandGlyph'
 import { BrandSprite } from '@/ui/brand-glyph/BrandSprite'
 
@@ -14,17 +16,18 @@ import { BrandSprite } from '@/ui/brand-glyph/BrandSprite'
 const COPIES = 5
 
 interface GroupProps {
+	items: Aggregator[]
 	/** Копии существуют только ради непрерывности и скринридеру не нужны */
 	clone?: boolean
 }
 
-function Group({ clone }: GroupProps) {
+function Group({ items, clone }: GroupProps) {
 	return (
 		<ul
 			className={styles.group}
 			aria-hidden={clone || undefined}
 		>
-			{AGGREGATORS.map(item => (
+			{items.map(item => (
 				<li
 					key={item.id}
 					className={styles.item}
@@ -47,11 +50,14 @@ function Group({ clone }: GroupProps) {
  * ровно на длину одной, поэтому шов не виден. При запросе на покой лента останавливается и
  * раскладывается в обычный ряд — иначе часть логотипов осталась бы за кадром.
  */
-export function Aggregators() {
+export async function Aggregators() {
+	const content = await getContent()
+	const items = getAggregators(content)
+
 	return (
 		<section
 			className={styles.strip}
-			aria-label='Музыкальные площадки'
+			aria-label={content.a11y.aggregators}
 		>
 			<BrandSprite />
 
@@ -62,6 +68,7 @@ export function Aggregators() {
 				{Array.from({ length: COPIES }, (_, index) => (
 					<Group
 						key={index}
+						items={items}
 						clone={index > 0}
 					/>
 				))}

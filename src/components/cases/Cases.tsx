@@ -1,9 +1,12 @@
 import { CaseCard } from './CaseCard'
 import styles from './Cases.module.scss'
-import { CASES } from '@/constants/cases'
+import { getCases } from '@/constants/cases'
+import { getContent } from '@/server/content'
 import { Carousel } from '@/ui/carousel/Carousel'
 
-export function Cases() {
+export async function Cases() {
+	const content = await getContent()
+
 	return (
 		<section
 			id='cases'
@@ -14,22 +17,25 @@ export function Cases() {
 		>
 			<meta
 				itemProp='name'
-				content='Кейсы ONDA FAME'
+				content={content.cases.schemaName}
 			/>
 			<div className='container'>
 				<Carousel
 					id='cases-track'
 					headingId='cases-title'
-					title='Кейсы'
-					description='Цифры из отчётов по завершённым кампаниям.'
-					label='Кейсы'
+					title={content.cases.title}
+					description={content.cases.description}
+					label={content.cases.label}
+					prevLabel={content.a11y.carouselPrev}
+					nextLabel={content.a11y.carouselNext}
 					listClassName={styles.track}
 				>
-					{CASES.map((study, index) => (
+					{getCases(content).map((study, index) => (
 						<CaseCard
 							key={study.id}
 							study={study}
 							position={index + 1}
+							labels={content.cases}
 						/>
 					))}
 				</Carousel>

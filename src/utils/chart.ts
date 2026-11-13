@@ -72,16 +72,20 @@ export function buildChartData(chart: CaseChart, theme: ChartTheme): ChartData<'
 		yAxisID: axis
 	})
 
+	const clips = { label: chart.clips.label, data: chart.clips.data, ...line(theme.cyan, 'clips') }
+
 	return {
 		labels: chart.labels,
-		datasets: [
-			{
-				label: chart.listeners.label,
-				data: chart.listeners.data,
-				...line(theme.accent, 'listeners')
-			},
-			{ label: chart.clips.label, data: chart.clips.data, ...line(theme.cyan, 'clips') }
-		]
+		datasets: chart.listeners
+			? [
+					{
+						label: chart.listeners.label,
+						data: chart.listeners.data,
+						...line(theme.accent, 'listeners')
+					},
+					clips
+				]
+			: [clips]
 	}
 }
 
@@ -101,6 +105,9 @@ const TICK_SIZE = 12
  * её собственные подписи, измеренные тем же шрифтом, которым будут нарисованы.
  */
 function fitToLabels(scale: Scale, font: string) {
+	// Спрятанная шкала всё равно проходит fit: без выхода она оставит пустое поле у края холста
+	if (!scale.options.display) return
+
 	const { ctx } = scale.chart
 
 	ctx.save()
@@ -116,7 +123,15 @@ function fitToLabels(scale: Scale, font: string) {
 	if (widest > 0) scale.width = Math.max(scale.width, Math.ceil(widest) + 12)
 }
 
-export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): ChartOptions<'line'> {
+/**
+ * hasListeners — есть ли у кейса линия слушателей. Без неё левая шкала прячется, а правая
+ * остаётся единственной и не схлопывается на узком экране.
+ */
+export function buildChartOptions(
+	reducedMotion: boolean,
+	theme: ChartTheme,
+	hasListeners: boolean
+): ChartOptions<'line'> {
 	const axisTicks = {
 		color: theme.tick,
 		font: { family: theme.font, size: TICK_SIZE },
@@ -128,7 +143,7 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 		...axisTicks,
 		// Пустые подписи chart.js не измеряет, поэтому ось схлопывается и отдаёт ширину графику
 		callback(this: Scale, value: string | number) {
-			return this.chart.width < NARROW_CHART ? '' : compact.format(Number(value))
+			return hasListeners && this.chart.width < NARROW_CHART ? '' : compact.format(Number(value))
 		}
 	}
 
@@ -154,7 +169,8 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 				callbacks: {
 					label: context => `${context.dataset.label}: ${full.format(context.parsed.y ?? 0)}`,
 					// Значение красится в цвет своей линии — легенды нет, различать надо здесь
-					labelTextColor: context => (context.datasetIndex === 0 ? theme.accentText : theme.cyan)
+					labelTextColor: context =>
+						context.dataset.yAxisID === 'listeners' ? theme.accentText : theme.cyan
 				}
 			}
 		},
@@ -167,6 +183,7 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 			listeners: {
 				type: 'linear',
 				position: 'left',
+				display: hasListeners,
 				grid: { color: theme.grid },
 				border: { display: false },
 				ticks: axisTicks,
@@ -177,7 +194,8 @@ export function buildChartOptions(reducedMotion: boolean, theme: ChartTheme): Ch
 				position: 'right',
 				// Своя вершина шкалы: без неё обе кривые нормализуются одинаково и сливаются в одну
 				suggestedMax: 200_000,
-				grid: { display: false },
+				// Сетку рисует левая шкала; когда её нет, горизонтальные линии берёт на себя эта
+				grid: hasListeners ? { display: false } : { color: theme.grid },
 				border: { display: false },
 				ticks: clipsTicks,
 				afterFit: scale => fitToLabels(scale, theme.font)

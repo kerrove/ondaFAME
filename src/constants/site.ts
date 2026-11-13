@@ -1,5 +1,3 @@
-import type { NavLink } from '@/types'
-
 /**
  * Незаданный секрет в GitHub Actions разворачивается в пустую строку, а не в undefined, поэтому
  * `??` его не ловит и в сборку уходит пустой адрес. Проверяем значение, а не факт объявления.
@@ -46,35 +44,3 @@ export const TELEGRAM_URL = fromEnv(
 	process.env.NEXT_PUBLIC_TELEGRAM_URL,
 	'https://t.me/ondafame'
 )
-
-export const BRAND = {
-	/** Логотип разрезан по начертанию: «onda» белым, «FAME» фиолетовым */
-	wordmarkLight: 'onda',
-	wordmarkAccent: 'FAME',
-	fullName: 'ONDA FAME',
-	legalName: 'ONDA FAME',
-	tagline: 'Маркетинговое агентство полного цикла для музыкантов',
-	description:
-		'Первое маркетинговое агентство полного цикла с гарантией результата. Продюсирование, продвижение у блогеров, SMM и контент-продакшн для артистов.'
-} as const
-
-/**
- * Контакты офиса. Телефон передан владельцем как заглушка (000-00-00) — перед публикацией
- * заменить на рабочий вместе с href: он собирается из тех же цифр вручную.
- */
-export const CONTACTS = {
-	address: 'Москва, Павелецкая наб., 2, корп. 3',
-	phone: '+7 (495) 000-00-00',
-	phoneHref: 'tel:+74950000000',
-	email: 'info@ondafame.ru'
-} as const
-
-export const CTA_LABEL = 'Связаться с нами'
-export const CTA_NOTE = 'Ответим в течение рабочего дня.'
-
-export const NAV_LINKS: NavLink[] = [
-	{ href: '#services', label: 'Услуги' },
-	{ href: '#cases', label: 'Кейсы' },
-	{ href: '#team', label: 'Команда' },
-	{ href: '#faq', label: 'Вопросы' }
-]

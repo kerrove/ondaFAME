@@ -1,11 +1,13 @@
 import Link from 'next/link'
 
 import styles from './Header.module.scss'
-import { CTA_LABEL, NAV_LINKS, TELEGRAM_URL } from '@/constants/site'
+import { getContent } from '@/server/content'
 import { Button } from '@/ui/button/Button'
 import { Logo } from '@/ui/logo/Logo'
 
-export function Header() {
+export async function Header() {
+	const { a11y, brand, contacts, cta, nav } = await getContent()
+
 	return (
 		<header className={styles.header}>
 			<div className={styles.inner}>
@@ -14,17 +16,20 @@ export function Header() {
 					href='/'
 					// Маршрут и так открыт: префетч самого себя тянет лишний RSC-ответ
 					prefetch={false}
-					aria-label='ondaFAME, на главную'
+					aria-label={a11y.logoHome}
 				>
-					<Logo />
+					<Logo
+						light={brand.wordmarkLight}
+						accent={brand.wordmarkAccent}
+					/>
 				</Link>
 
 				<nav
 					className={styles.nav}
-					aria-label='Разделы страницы'
+					aria-label={a11y.headerNav}
 				>
 					<ul className={styles.list}>
-						{NAV_LINKS.map(link => (
+						{nav.map(link => (
 							<li key={link.href}>
 								<a
 									className={styles.link}
@@ -38,11 +43,11 @@ export function Header() {
 				</nav>
 
 				<Button
-					href={TELEGRAM_URL}
+					href={contacts.telegramUrl}
 					variant='ghost'
 					className={styles.cta}
 				>
-					{CTA_LABEL}
+					{cta.label}
 				</Button>
 			</div>
 		</header>

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-import { BRAND } from '@/constants/site'
+import { getContent } from '@/server/content'
 import { asset } from '@/utils/asset'
 
 /**
@@ -9,11 +9,13 @@ import { asset } from '@/utils/asset'
  */
 export const dynamic = 'force-static'
 
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+	const { brand } = await getContent()
+
 	return {
-		name: `${BRAND.fullName} — ${BRAND.tagline}`,
-		short_name: BRAND.fullName,
-		description: BRAND.description,
+		name: `${brand.fullName} — ${brand.tagline}`,
+		short_name: brand.fullName,
+		description: brand.description,
 		lang: 'ru',
 		// Пути внутри манифеста Next не трогает — в отличие от <link rel="manifest">, которому
 		// basePath проставляется автоматически. Без asset() иконки уедут в корень домена.

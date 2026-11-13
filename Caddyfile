@@ -1,0 +1,14 @@
+ondafame.ru {
+	encode zstd gzip
+	reverse_proxy frontend:3000
+}
+
+www.ondafame.ru {
+	redir https://ondafame.ru{uri} permanent
+}
+
+# Доступ по IP без HTTPS — чтобы проверить сайт, пока DNS домена не смотрит на этот сервер
+http://82.148.18.86 {
+	encode zstd gzip
+	reverse_proxy frontend:3000
+}

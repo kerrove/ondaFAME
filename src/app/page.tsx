@@ -6,8 +6,12 @@ import { Hero } from '@/components/hero/Hero'
 import { Quote } from '@/components/quote/Quote'
 import { Services } from '@/components/services/Services'
 import { Team } from '@/components/team/Team'
+import { ImagesConfig } from '@/configs/images.config'
+import { getContent } from '@/server/content'
 
-export default function HomePage() {
+export default async function HomePage() {
+	const { quote, ctaBands, cta, contacts } = await getContent()
+
 	return (
 		<>
 			<Hero />
@@ -16,27 +20,25 @@ export default function HomePage() {
 			<Cases />
 
 			<Quote
-				lead='«Всегда заходи в воду чуть дальше, чем можешь. И когда ноги перестают доставать до дна —'
-				accent='вот тогда ты в нужном месте, чтобы сделать что-то стоящее.»'
-				author='Дэвид Боуи'
-				source='Интервью для документального фильма BBC «Inspirations», 1997'
+				{...quote}
+				photo={ImagesConfig.LIL_CRYSTALLL}
 			/>
 
 			<CtaBand
-				id='cta-pricing'
-				lead='Через нас продвижение'
-				accent='дешевле. Попробуй.'
-				text='За счёт долгосрочного и стратегического партнёрства с блогерами, сервисами, музыкальными СМИ и медиа мы получаем эксклюзивные скидки за объём приведённых клиентов. Эти условия недоступны при прямом заказе — у человека нет оптовых скидок, поэтому работать через нас, банально, выгоднее.'
+				{...ctaBands.pricing}
+				ctaLabel={cta.label}
+				ctaNote={cta.note}
+				ctaHref={contacts.telegramUrl}
 			/>
 
 			<Team />
 			<Faq />
 
 			<CtaBand
-				id='cta-final'
-				lead='Мы сделаем так, чтобы'
-				accent='твои треки знал каждый.'
-				text='Работа без посредников, без пустых обещаний и без кабальных условий лейблов. Ты заслуживаешь стать известным, и только мы сможем в этом помочь.'
+				{...ctaBands.final}
+				ctaLabel={cta.label}
+				ctaNote={cta.note}
+				ctaHref={contacts.telegramUrl}
 			/>
 		</>
 	)

@@ -1,0 +1,232 @@
+/*
+ * Рабочий инструмент, а не витрина: крупный шрифт, спокойный контраст, никакой анимации.
+ * Заказчик правит тексты редко — всё должно читаться с первого взгляда.
+ */
+.page {
+	width: min(100% - 2 * var(--gutter), 52rem);
+	margin-inline: auto;
+	padding-block: 7rem 2rem;
+}
+
+.intro {
+	margin-bottom: 2rem;
+}
+
+.heading {
+	margin-bottom: 0.75rem;
+	font-size: clamp(1.75rem, 4vw, 2.25rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.lead {
+	max-width: 62ch;
+	color: var(--muted);
+	font-size: 1rem;
+	line-height: 1.6;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+/* Разделы */
+.section {
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-tile);
+	background: var(--panel);
+}
+
+.section[open] {
+	border-color: var(--hairline-strong);
+}
+
+.summary {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.75rem;
+	padding: 1.125rem 1.25rem;
+	cursor: pointer;
+	list-style-position: inside;
+}
+
+.sectionTitle {
+	font-size: 1.0625rem;
+	font-weight: 700;
+}
+
+.sectionBody {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	padding: 0 1.25rem 1.5rem;
+}
+
+.hint {
+	color: var(--faint);
+	font-size: 0.875rem;
+}
+
+.group {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	min-width: 0;
+	margin: 0;
+	padding: 1rem;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-tile);
+	background: var(--panel-raised);
+}
+
+.groupTitle {
+	padding-inline: 0.375rem;
+	color: var(--accent-text);
+	font-size: 0.9375rem;
+	font-weight: 700;
+}
+
+/* Поля */
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+}
+
+.fieldHead {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.label {
+	color: var(--foreground);
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+.input {
+	width: 100%;
+	padding: 0.625rem 0.75rem;
+	border: 1px solid var(--hairline-strong);
+	border-radius: 10px;
+	background: #000000;
+	color: var(--foreground);
+	font: inherit;
+	font-size: 1rem;
+	line-height: 1.5;
+	resize: vertical;
+	/* Там, где браузер умеет, поле растёт по тексту само */
+	field-sizing: content;
+}
+
+.input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+	border-color: transparent;
+}
+
+.multiline {
+	min-height: 5.5rem;
+}
+
+.badge {
+	padding: 0.125rem 0.5rem;
+	border-radius: var(--radius-pill);
+	background: var(--accent-soft);
+	color: var(--accent-text);
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+.reset {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 0.375rem;
+	padding: 0.25rem 0;
+	color: var(--muted);
+	font-size: 0.8125rem;
+	cursor: pointer;
+}
+
+.reset:hover {
+	color: var(--accent-text);
+}
+
+/* Панель сохранения */
+.toolbar {
+	position: sticky;
+	bottom: 0;
+	z-index: 5;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem 1rem;
+	margin-top: 1rem;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--hairline-strong);
+	border-radius: var(--radius-tile);
+	background: var(--panel-raised);
+	box-shadow: 0 -18px 40px -24px #000000;
+}
+
+.status {
+	color: var(--muted);
+	font-size: 0.9375rem;
+}
+
+.statusSuccess {
+	color: #4ade80;
+}
+
+.statusError {
+	color: #f87171;
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.625rem;
+}
+
+.primary,
+.secondary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1.25rem;
+	border-radius: var(--radius-pill);
+	font-size: 0.9375rem;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.primary {
+	background: var(--accent-fill);
+	color: #ffffff;
+}
+
+.primary:hover:not(:disabled) {
+	background: var(--accent-fill-hover);
+}
+
+.secondary {
+	border: 1px solid var(--hairline-strong);
+	color: var(--foreground);
+}
+
+.secondary:hover:not(:disabled) {
+	border-color: var(--accent);
+}
+
+.primary:disabled,
+.secondary:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}

@@ -4,8 +4,10 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Footer } from '@/components/footer/Footer'
 import { Header } from '@/components/header/Header'
-import { BRAND, SITE_ORIGIN, SITE_URL, TELEGRAM_URL } from '@/constants/site'
+import { SITE_ORIGIN, SITE_URL } from '@/constants/site'
 import { MotionProvider } from '@/providers/motion-provider/MotionProvider'
+import { getContent } from '@/server/content'
+import type { SiteContent } from '@/types'
 
 const inter = Inter({
 	variable: '--font-inter',
@@ -14,46 +16,42 @@ const inter = Inter({
 	display: 'swap'
 })
 
-export const metadata: Metadata = {
-	metadataBase: new URL(SITE_ORIGIN),
-	title: {
-		default: `${BRAND.fullName} — ${BRAND.tagline}`,
-		template: `%s — ${BRAND.fullName}`
-	},
-	description: BRAND.description,
-	applicationName: BRAND.fullName,
-	keywords: [
-		'продвижение музыки',
-		'музыкальный маркетинг',
-		'продвижение трека в TikTok',
-		'продвижение у блогеров',
-		'продюсирование артиста',
-		'SMM для музыкантов',
-		'масспостинг'
-	],
-	authors: [{ name: BRAND.fullName, url: SITE_URL }],
-	creator: 'https://kerrove.ru',
-	publisher: BRAND.fullName,
-	alternates: { canonical: `${SITE_URL}/` },
-	openGraph: {
-		type: 'website',
-		locale: 'ru_RU',
-		url: SITE_URL,
-		siteName: BRAND.fullName,
-		title: `${BRAND.fullName} — ${BRAND.tagline}`,
-		description: BRAND.description
-	},
-	twitter: {
-		card: 'summary_large_image',
-		title: `${BRAND.fullName} — ${BRAND.tagline}`,
-		description: BRAND.description
-	},
-	robots: {
-		index: true,
-		follow: true,
-		googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 }
-	},
-	category: 'marketing'
+export async function generateMetadata(): Promise<Metadata> {
+	const { brand, metadata } = await getContent()
+
+	return {
+		metadataBase: new URL(SITE_ORIGIN),
+		title: {
+			default: `${brand.fullName} — ${brand.tagline}`,
+			template: `%s — ${brand.fullName}`
+		},
+		description: brand.description,
+		applicationName: brand.fullName,
+		keywords: metadata.keywords,
+		authors: [{ name: brand.fullName, url: SITE_URL }],
+		creator: 'https://kerrove.ru',
+		publisher: brand.fullName,
+		alternates: { canonical: `${SITE_URL}/` },
+		openGraph: {
+			type: 'website',
+			locale: 'ru_RU',
+			url: SITE_URL,
+			siteName: brand.fullName,
+			title: `${brand.fullName} — ${brand.tagline}`,
+			description: brand.description
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title: `${brand.fullName} — ${brand.tagline}`,
+			description: brand.description
+		},
+		robots: {
+			index: true,
+			follow: true,
+			googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 }
+		},
+		category: 'marketing'
+	}
 }
 
 export const viewport: Viewport = {
@@ -62,26 +60,30 @@ export const viewport: Viewport = {
 }
 
 /** Организация целиком — в JSON-LD; разметка услуг, кейсов, команды и вопросов лежит микроданными в самих секциях. */
-const organizationLd = {
-	'@context': 'https://schema.org',
-	'@type': 'Organization',
-	name: BRAND.fullName,
-	legalName: BRAND.legalName,
-	url: SITE_URL,
-	description: BRAND.description,
-	slogan: 'Пора выходить из тени',
-	areaServed: 'RU',
-	knowsLanguage: 'ru',
-	sameAs: [TELEGRAM_URL],
-	contactPoint: {
-		'@type': 'ContactPoint',
-		contactType: 'sales',
-		url: TELEGRAM_URL,
-		availableLanguage: 'Russian'
+function organizationLd(brand: SiteContent['brand'], telegramUrl: string) {
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'Organization',
+		name: brand.fullName,
+		legalName: brand.legalName,
+		url: SITE_URL,
+		description: brand.description,
+		slogan: brand.slogan,
+		areaServed: 'RU',
+		knowsLanguage: 'ru',
+		sameAs: [telegramUrl],
+		contactPoint: {
+			'@type': 'ContactPoint',
+			contactType: 'sales',
+			url: telegramUrl,
+			availableLanguage: 'Russian'
+		}
 	}
 }
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+	const { a11y, brand, contacts } = await getContent()
+
 	return (
 		<html
 			lang='ru'
@@ -97,7 +99,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 					className='skip-link'
 					href='#main'
 				>
-					Перейти к основному содержимому
+					{a11y.skipLink}
 				</a>
 				<MotionProvider>
 					<Header />
@@ -106,7 +108,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 				</MotionProvider>
 				<script
 					type='application/ld+json'
-					dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(organizationLd(brand, contacts.telegramUrl))
+					}}
 				/>
 			</body>
 		</html>

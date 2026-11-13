@@ -1,9 +1,8 @@
 import {
 	CalendarClock,
 	ChartColumn,
-	Clapperboard,
 	KeyRound,
-	ListMusic,
+	Megaphone,
 	Radio,
 	Rocket,
 	Search,
@@ -22,8 +21,7 @@ const ICONS: Record<ServiceIcon, ComponentType<{ size?: number; 'aria-hidden'?: 
 	bloggers: Users,
 	smm: Sparkles,
 	target: Target,
-	playlists: ListMusic,
-	virality: Clapperboard,
+	'tiktok-ads': Megaphone,
 	seo: Search,
 	charts: ChartColumn,
 	turnkey: KeyRound,
@@ -37,7 +35,8 @@ interface Props {
 }
 
 export function ServiceCard({ service, position }: Props) {
-	const Icon = ICONS[service.icon]
+	// id услуги и ключ иконки — одно и то же: список услуг и набор иконок совпадают один в один
+	const Icon = ICONS[service.id]
 
 	return (
 		<Reveal

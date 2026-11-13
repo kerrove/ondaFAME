@@ -10,4 +10,6 @@ export class ImagesConfig {
 	static readonly CHEREDNICHENKO = asset('/team/cherednichenko.avif')
 	static readonly COOPER = asset('/team/cooper.avif')
 	static readonly SONG = asset('/song.avif')
+	static readonly NOTER_DAME = asset('/noterdamedeparis.webp')
+	static readonly LIL_CRYSTALLL = asset('/lyl-crystall.jpg')
 }

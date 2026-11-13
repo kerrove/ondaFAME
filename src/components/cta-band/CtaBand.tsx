@@ -1,20 +1,18 @@
 import styles from './CtaBand.module.scss'
-import { CTA_LABEL, CTA_NOTE, TELEGRAM_URL } from '@/constants/site'
+import type { CtaBandContent } from '@/types'
 import { Button } from '@/ui/button/Button'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
 import { Reveal } from '@/ui/reveal/Reveal'
 
-interface Props {
-	id: string
-	/** Первая половина заголовка — белая: обстоятельство */
-	lead: string
-	/** Вторая половина — акцентная: обещание */
-	accent: string
-	text: string
+/** Повторяющийся блок призыва. Формулировка действия одна на весь сайт и не варьируется. */
+interface Props extends CtaBandContent {
+	/** Кнопка и подпись под ней — общие на весь сайт, приходят из cta в content.json */
+	ctaLabel: string
+	ctaNote: string
+	ctaHref: string
 }
 
-/** Повторяющийся блок призыва. Формулировка действия одна на весь сайт и не варьируется. */
-export function CtaBand({ id, lead, accent, text }: Props) {
+export function CtaBand({ id, lead, accent, text, ctaLabel, ctaNote, ctaHref }: Props) {
 	return (
 		<section
 			className={styles.band}
@@ -41,12 +39,12 @@ export function CtaBand({ id, lead, accent, text }: Props) {
 					className={styles.action}
 				>
 					<Button
-						href={TELEGRAM_URL}
+						href={ctaHref}
 						size='lg'
 					>
-						{CTA_LABEL}
+						{ctaLabel}
 					</Button>
-					<p className={styles.note}>{CTA_NOTE}</p>
+					<p className={styles.note}>{ctaNote}</p>
 				</Reveal>
 			</div>
 		</section>

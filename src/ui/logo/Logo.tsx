@@ -1,12 +1,16 @@
 import styles from './Logo.module.scss'
-import { BRAND } from '@/constants/site'
 
 /** Начертание логотипа: «onda» белым, «FAME» акцентным — единственный капслок на сайте. */
-export function Logo() {
+interface Props {
+	light: string
+	accent: string
+}
+
+export function Logo({ light, accent }: Props) {
 	return (
 		<span className={styles.logo}>
-			<span className={styles.light}>{BRAND.wordmarkLight}</span>
-			<span className={styles.accent}>{BRAND.wordmarkAccent}</span>
+			<span className={styles.light}>{light}</span>
+			<span className={styles.accent}>{accent}</span>
 		</span>
 	)
 }

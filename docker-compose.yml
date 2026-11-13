@@ -1,0 +1,33 @@
+name: 'ondafame'
+services:
+  frontend:
+    build:
+      context: .
+    restart: always
+    # Правки текстов из админки. Папка лежит и в контексте сборки, поэтому новая сборка сразу
+    # печёт страницу с ними, а том переносит их между пересборками контейнера.
+    volumes:
+      - ./data:/app/data
+    # Наружу не публикуется: весь трафик идёт через caddy
+    expose:
+      - '3000'
+
+  # Caddy сам выпускает сертификат Let's Encrypt для доменов из Caddyfile и продлевает его
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Сертификаты и ACME-аккаунт: без тома они выпускались бы заново при каждом пересоздании
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+
+volumes:
+  caddy_data:
+  caddy_config:

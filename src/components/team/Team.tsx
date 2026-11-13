@@ -1,11 +1,14 @@
 import styles from './Team.module.scss'
-import { TEAM } from '@/constants/team'
+import { getTeam } from '@/constants/team'
+import { getContent } from '@/server/content'
 import { Avatar } from '@/ui/avatar/Avatar'
 import { Carousel } from '@/ui/carousel/Carousel'
 import { GridBackdrop } from '@/ui/grid-backdrop/GridBackdrop'
 import { Reveal } from '@/ui/reveal/Reveal'
 
-export function Team() {
+export async function Team() {
+	const content = await getContent()
+
 	return (
 		<section
 			id='team'
@@ -16,7 +19,7 @@ export function Team() {
 		>
 			<meta
 				itemProp='name'
-				content='Команда ONDA FAME'
+				content={content.team.schemaName}
 			/>
 			<GridBackdrop />
 
@@ -24,12 +27,14 @@ export function Team() {
 				<Carousel
 					id='team-track'
 					headingId='team-title'
-					title='Наша команда'
-					description='Мы собрали людей, которые любят музыку и умеют делать её заметной.'
-					label='Наша команда'
+					title={content.team.title}
+					description={content.team.description}
+					label={content.team.label}
+					prevLabel={content.a11y.carouselPrev}
+					nextLabel={content.a11y.carouselNext}
 					listClassName={styles.track}
 				>
-					{TEAM.map((member, index) => (
+					{getTeam(content).map((member, index) => (
 						<Reveal
 							key={member.id}
 							as='li'
