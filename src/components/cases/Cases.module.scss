@@ -87,6 +87,15 @@
 	box-shadow: 0 14px 30px -18px var(--accent-glow);
 }
 
+.animatedCover {
+	max-width: 100%;
+	border: 1px solid var(--hairline);
+	border-radius: var(--radius-tile);
+	background: var(--panel-raised);
+	object-fit: cover;
+	pointer-events: none;
+}
+
 .tag {
 	display: inline-block;
 	margin-bottom: 0.625rem;

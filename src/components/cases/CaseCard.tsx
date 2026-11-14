@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { ArrowUpRight, Music2, Star } from 'lucide-react'
 
 import { CaseChartLoader } from './CaseChartLoader'
+import { CaseVideoCover } from './CaseVideoCover'
 import styles from './Cases.module.scss'
 import { ChartTable } from './ChartTable'
 import type { CaseStudy, SiteContent } from '@/types'
@@ -21,6 +22,7 @@ interface Props {
 export function CaseCard({ study, position, labels }: Props) {
 	const { cardPrefix, chartCaption, chartMonthColumn, featuredLabel, tiktokLabel } = labels
 	const title = `${cardPrefix} ${study.artist} — ${study.track}`
+	const { chart } = study
 
 	return (
 		<Reveal
@@ -30,7 +32,7 @@ export function CaseCard({ study, position, labels }: Props) {
 			className={clsx(
 				styles.card,
 				study.featured && styles.featured,
-				!study.chart && styles.textOnly
+				!chart && styles.textOnly
 			)}
 			itemProp='itemListElement'
 			itemScope
@@ -51,14 +53,21 @@ export function CaseCard({ study, position, labels }: Props) {
 					</p>
 				)}
 				<div className={styles.identity}>
-					<Avatar
-						name={study.artist}
-						src={study.cover}
-						size={80}
-						shape='tile'
-						className={styles.cover}
-						decorative
-					/>
+					{study.coverLoop && study.cover ? (
+						<CaseVideoCover
+							loop={study.coverLoop}
+							cover={study.cover}
+						/>
+					) : (
+						<Avatar
+							name={study.artist}
+							src={study.cover}
+							size={80}
+							shape='tile'
+							className={styles.cover}
+							decorative
+						/>
+					)}
 					<div className={styles.identityText}>
 						<p className={styles.tag}>{study.tag}</p>
 						<h3
@@ -110,11 +119,11 @@ export function CaseCard({ study, position, labels }: Props) {
 				</ul>
 			</div>
 
-			{study.chart && (
-				<CaseChartLoader chart={study.chart}>
+			{chart && (
+				<CaseChartLoader chart={chart}>
 					<ChartTable
-						chart={study.chart}
-						caption={`${title}: ${study.chart.caption ?? chartCaption}`}
+						chart={chart}
+						caption={`${title}: ${chart.caption ?? chartCaption}`}
 						defaultColumn={chartMonthColumn}
 					/>
 				</CaseChartLoader>

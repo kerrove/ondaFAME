@@ -60,7 +60,7 @@ jobs:
       # Админке нужен сервер: Server Functions, proxy и запись на диск статический экспорт не
       # переживает. На Pages её нет — тексты берутся из content.json на момент сборки.
       - name: Drop admin from static export
-        run: rm -rf src/app/admin src/proxy.ts
+        run: rm -rf src/app/admin src/components/admin src/proxy.ts
 
       # .env в репозиторий не коммитится, поэтому в CI его нет: значения приходят секретами
       # репозитория (Settings → Secrets and variables → Actions). Незаданный секрет разворачивается

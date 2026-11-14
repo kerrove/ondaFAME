@@ -70,6 +70,8 @@ interface CaseContent {
 export interface CaseStudy extends CaseContent {
 	/** Обложка релиза в /public. null — артворк ещё не передан, рисуем инициалы. */
 	cover: string | null
+	/** Беззвучная петля обложки. */
+	coverLoop: string | null
 }
 
 /** Текстовая часть карточки сотрудника — ровно то, что лежит в content.json */

@@ -12,4 +12,6 @@ export class ImagesConfig {
 	static readonly SONG = asset('/song.avif')
 	static readonly NOTER_DAME = asset('/noterdamedeparis.webp')
 	static readonly LIL_CRYSTALLL = asset('/lyl-crystall.jpg')
+	static readonly TAGADEMAR_COVER = asset('/cases/tagademar-cover.webp')
+	static readonly TAGADEMAR_LOOP = asset('/cases/tagademar-loop.mp4')
 }

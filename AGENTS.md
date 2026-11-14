@@ -1,9 +1,210 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Commands
+
+Package manager is **bun** (`bun.lock`, `packageManager: bun@1.3.8`, `engines.bun ^1.2`). Ignore the
+npm/yarn/pnpm variants in README.md — that text is create-next-app boilerplate.
+
+```bash
+bun install
+bun run dev        # next dev -H 0.0.0.0 -p 3000 (no turbopack; also regenerates AGENTS.md + .next/types/*)
+bun run dev-local  # same, with --turbopack
+bun run build      # prebuild runs `rimraf .next`, then next build via real node (see below)
+bun run start      # next start (requires a prior build)
+bun run prod       # build + start on 0.0.0.0:3000
+bun run lint       # bare `eslint` (flat config), not `next lint`
+bun run format     # prettier --write "src/**/*.{ts,tsx}"
+bun run check      # knip --config ./knip.json — unused files/exports/deps
+bunx tsc --noEmit  # typecheck (native TS 7); there is no `typecheck` script
+```
+
+**TypeScript стоит связкой TS 7 + TS 6.** В `package.json`:
+`"@typescript/native": "npm:typescript@^7.0.2"` и `"typescript": "npm:@typescript/typescript6@^6.0.2"`.
+`bunx tsc` — нативный TS 7 (быстрый), а ESLint (`typescript-eslint@8` не поддерживает TS 7), `next
+build` и редактор работают через API TS 6 из пакета `typescript` (бинарь `tsc6`). Не заменять обратно
+на голый `"typescript": "^7..."` — линт упадёт на импорте конфига. Вернуться к одному пакету можно,
+когда выйдет typescript-eslint с поддержкой TS 7
+(https://github.com/typescript-eslint/typescript-eslint/issues/10940).
+
+**Static export is conditional.** `next.config.ts` turns on `output: 'export'` + `basePath` only when
+`GITHUB_PAGES=true` (set by `.github/workflows/nextjs.yml`, which deploys to GitHub Pages). Do not
+make it unconditional — `next dev`/`next start` stop working under export. Route handlers that must
+survive export (`sitemap.ts`, `robots.ts`, `manifest.ts`) carry `export const dynamic = 'force-static'`;
+removing it fails the export build at page-data collection. `metadataBase` is the **origin only**
+(`SITE_ORIGIN`), because Next prepends `basePath` to file-convention images itself — putting the base
+path in both doubles it (`/repo/repo/opengraph-image.png`).
+
+**`build` and `start` invoke `node node_modules/next/dist/bin/next` on purpose — do not shorten them
+back to `next build`.** `next` has a `#!/usr/bin/env node` shebang, and under `bun run` Bun executes
+it in-process instead of spawning Node. On Vercel (Bun 1.3.14, Linux x64) that process segfaults
+during teardown *after* the build has already succeeded and printed its route table — the artifacts
+are fine, but the non-zero exit code fails the deploy. `next/og` builds the OG image through
+`resvg.wasm`/`yoga.wasm`, and WASM teardown is the likely trigger. Routing the build through real
+Node avoids the whole class of problem and costs nothing locally.
+
+**Тестов нет.** В проекте нет ни раннера (jest/playwright), ни тестовых файлов, поэтому скриптов
+`test*` в `package.json` и job `tests` в `.github/workflows/deploy.yaml` тоже нет. Если тесты нужны,
+спросить, прежде чем ставить раннер, и вернуть job в CI вместе с ним. `tsconfig copy.json` —
+остаток шаблона из другого проекта (ссылается на типы `jest`/`@testing-library`), его не читает ни
+один инструмент; не править и не переносить его настройки в `tsconfig.json`.
+
+## Architecture
+
+Current state: the create-next-app scaffold (App Router — `src/app/{layout,page}.tsx`,
+`globals.css`) with the real dependency set already installed. There is no application code, data
+layer, or route structure yet, so treat every structural decision as greenfield — but follow the
+conventions below; they are not negotiable defaults.
+
+### Stack specifics that change how code must be written
+
+- **Next.js 16.3.4 + React 19.2.8 with the React Compiler on** (`reactCompiler: true` in
+  `next.config.ts`, `babel-plugin-react-compiler`). Do not add `useMemo`/`useCallback`/`React.memo`
+  for performance; the compiler handles memoization and hand-rolled memoization fights it.
+- **`reactStrictMode: true`** — effects run twice in dev. Write effects that tolerate it instead of
+  disabling strict mode.
+- **`optimizePackageImports: ['lucide-react']`** — import icons by name
+  (`import { Heart } from 'lucide-react'`), never the whole namespace.
+- **Route types are ambient globals, not imports.** `LayoutProps<"/">`, `PageProps<...>` and friends
+  come from `.next/types/routes.d.ts`, pulled in via `next-env.d.ts`. See `src/app/layout.tsx`.
+  They are generated by `next dev`/`next build`, so after adding or renaming a route, a type error
+  about an unknown route string means the types are stale — re-run dev/build rather than widening
+  the type.
+- **Tailwind v4, CSS-first config.** No `tailwind.config.*`. Design tokens live in
+  `src/app/globals.css` under `@theme inline`, fed by `:root` custom properties with a
+  `prefers-color-scheme: dark` override. Add or change theme values there, not in a JS config.
+- **Sass is installed** (`sass` devDep, `*.scss` declared in `declaration.d.ts`) — see Styling.
+- **Fonts.** `next/font/google` loads Geist/Geist Mono in `layout.tsx` as `--font-geist-sans` /
+  `--font-geist-mono`, wired to Tailwind's `--font-sans` / `--font-mono`. The scaffold's
+  `body { font-family: Arial, Helvetica, sans-serif }` in `globals.css` overrides them unless a
+  `font-sans` utility is applied — remove it when real styling starts.
+- **Imports** use the `@/*` → `./src/*` alias from `tsconfig.json`.
+
+### Available libraries — use these before adding anything new
+
+`clsx` + `tailwind-merge` (class composition), `zustand` (client state), `react-hook-form` (forms),
+`framer-motion` (animation), `lucide-react` (icons), `dayjs` (dates), `react-hot-toast` (toasts).
+Adding a dependency that duplicates one of these needs a reason stated up front.
+
+### Directory layout
+
+The Prettier import-order config encodes the intended structure. Create these under `src/` as needed,
+and put files where that ordering expects them:
+
+`services/`, `components/`, `components/forms/`, `ui/`, `providers/`, `constants/`, `config/`,
+`store/`, `hooks/`, `utils/`, `api/`, `server/`, `types/`.
+
+`ui/` holds primitives (Button, Input, Modal); `components/` holds feature composites.
+
+**Naming.** Folders are lowercase kebab-case (`cta-band/`, `section-heading/`); files keep the
+PascalCase name of what they export. One component per folder: the folder holds `Component.tsx`,
+`Component.module.scss`, and its sub-components — there are **no `index.tsx` barrels**, so import the
+file directly: `import { CtaBand } from '@/components/cta-band/CtaBand'`.
+
+## Component rules
+
+### Dumb / Smart split (mandatory)
+
+Every component is one or the other — never both.
+
+- **Dumb (presentational).** Renders markup only. No logic-bearing hooks, no store access, no data
+  fetching, no `useEffect`, no business branching. Everything it needs arrives as props, including
+  callbacks. Server Component unless it needs DOM events. Trivially reusable and trivially readable.
+- **Smart (container).** Composes dumb components, owns state, calls hooks, reads the store, fetches
+  data, and passes plain props down. Contains as little JSX as possible — ideally just the
+  composition tree.
+
+A smart component that is also writing layout markup is a smart component that needs splitting.
+
+### File size: ~200 lines, hard ceiling
+
+If a file crosses roughly 200 lines:
+
+- **Logic overflows into one hook.** Extract the component's stateful behaviour into a single
+  `useXxx` hook (in the component's folder, or `src/hooks/` if shared) that returns the values and
+  handlers the component renders. Do not scatter it across five micro-hooks — one cohesive hook per
+  component.
+- **Markup overflows into sub-components.** Split the JSX into dumb sub-components in the same
+  folder. Extract by meaningful section, not by arbitrary line count.
+
+Hook files follow the same ceiling; a hook past 200 lines means the logic belongs in `services/` or
+`utils/`.
+
+### SOLID
+
+- **S** — one component, one reason to change; one hook, one concern. Data fetching, formatting, and
+  rendering do not share a file.
+- **O** — extend through props, composition, and `children`, not by adding `if (variant === ...)`
+  branches to an existing component.
+- **L** — a wrapper or variant must stay usable everywhere its base is: keep the prop contract,
+  forward `ref` and the remaining native props.
+- **I** — narrow prop types. Do not pass a whole entity when the component needs two fields, and do
+  not force consumers to supply props a variant ignores.
+- **D** — components depend on abstractions: hooks and `services/` functions, never on raw `fetch`
+  calls, the store's internals, or a concrete API client inlined in JSX.
+
+## Styling
+
+- **Classes live in SCSS, not in variables.** Never build `const cardClass = 'flex items-center …'`
+  or any other class-name constant. Each component gets its own `*.module.scss` next to it, and the
+  markup references `styles.card`, `styles.header`, and so on.
+- Read design tokens in SCSS through the CSS custom properties defined in `globals.css`
+  (`color: var(--foreground)`), so theming keeps working.
+- `clsx`/`tailwind-merge` are for conditional and merged classes at the call site
+  (`clsx(styles.card, isActive && styles.active)`) — not for storing static class strings.
+- Global styles stay in `globals.css`. `declaration.d.ts` types bare `*.scss` imports; `*.module.scss`
+  typing comes from Next.
+
+## Rendering discipline
+
+- **Server Components by default.** Add `'use client'` only where interactivity actually lives, and
+  push it as far down the tree as possible — a client boundary high in the tree pulls everything
+  below it into the bundle.
+- Pass server-fetched data down as props instead of refetching in client components; use `children`
+  to keep server-rendered subtrees inside client wrappers.
+- Watch what actually re-renders: keep state in the smallest component that needs it, subscribe to
+  zustand with selectors (`useStore(s => s.field)`) rather than pulling the whole store, and keep
+  context providers narrow so an unrelated update does not re-render the page.
+- Give lists stable `key`s from data ids, never the array index.
+- The React Compiler removes the need for manual memoization — it does not remove the need to place
+  state correctly.
+
+## Dynamic imports
+
+Use `next/dynamic` deliberately, not as an afterthought:
+
+- Heavy or below-the-fold client UI (modals, drawers, editors, carousels, `framer-motion`-driven
+  sections, anything chart-like) loads via `next/dynamic` with a `loading` fallback.
+- Browser-only code uses `dynamic(..., { ssr: false })` — allowed only inside a client component.
+- Keep above-the-fold and LCP content statically imported; lazy-loading it costs more than it saves.
+
+## Next.js docs
+
+Per AGENTS.md, this Next.js version differs from training data. The version-matched docs are vendored
+at `node_modules/next/dist/docs/` (`01-app/01-getting-started`, `01-app/02-guides`,
+`01-app/03-api-reference`). Read the relevant page there before writing framework code — prefer it
+over recalled API shapes.
+
+AGENTS.md itself is regenerated by `next dev` (see
+`node_modules/next/dist/server/lib/generate-agent-files.js`); commit its changes along with your work
+instead of reverting them.
+
+## Code style
+
+Prettier (`.prettierrc`) is authoritative: **tabs**, width 2, no semicolons, single quotes
+(JSX included), no trailing commas, `printWidth` 100, one JSX attribute per line, arrow params
+without parens. Import order is grouped and separated by `@trivago/prettier-plugin-sort-imports` —
+run `bun run format` rather than hand-sorting. The plugin is disabled for `*.test.ts(x)` so
+`jest.mock` can precede imports.
+
+`eslint-plugin-prettier`/`eslint-config-prettier` are installed but **not** wired into
+`eslint.config.mjs` (it is only `eslint-config-next` core-web-vitals + typescript), so `bun run lint`
+does not check formatting — run `bun run format` separately.
+
+Note that the scaffold files (`layout.tsx`, `page.tsx`, `next.config.ts`) still carry create-next-app
+formatting — reformat a file when you touch it.
+
 
 <!-- END:nextjs-agent-rules -->
